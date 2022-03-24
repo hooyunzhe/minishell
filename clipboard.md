@@ -17,5 +17,10 @@
 - echo -na -t "hello world'"          'helloworad "'
 - echo "test" (no optinos)
 
-## to-fix
+## redirection
 
+cat > outfile < Makefile
+
+cat > outfile > outfile2 < Makefile > outfile3 < outfile > outfile2 < src/minishell/main.c
+
+cat >> outfile >> outfile2 < Makefile >> outfile3 < outfile > outfile2 < src/minishell/main.c
