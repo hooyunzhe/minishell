@@ -6,23 +6,43 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:24:20 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/03/23 16:42:12 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/03/24 18:28:30 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "minishell.h"
-#include <unistd.h>
+#include "minishell.h"
 
 int	main(int argc, char **argv, char **envp)
 {
-	// t_data	data;
+	t_data	data;
 	
 	(void)argv;
 	(void)argc;
 	
-	// data.envp = envp;
-	// minishell(&data);
-	char	*args[] = { "-n","test",  NULL};
-	execve("/bin/echo", args, envp);
+	data.envp = envp;
+	minishell(&data);
 	return (0);
 }
+
+
+// #include <unistd.h>
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	// t_data	data;
+	
+// 	(void)argv;
+// 	(void)argc;
+	
+// 	// data.envp = envp;
+// 	// minishell(&data);
+// 	char *arr[] = {"cat", "Make", "file", NULL};
+// 	execve("/bin/cat", arr, envp);
+// 	// dup2(0, open("Makefile", O_RDONLY));
+// 	// pid_t pid;
+// 	// pid = fork();
+// 	// if (pid == 0)
+// 	// {
+// 	// 	execeve();
+// 	// }
+// 	return (0);
+// }
