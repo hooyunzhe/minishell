@@ -6,7 +6,7 @@
 /*   By: nfernand <nfernand@student.42kl.edu.m      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 10:37:55 by nfernand          #+#    #+#             */
-/*   Updated: 2022/03/29 11:39:37 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/03/29 11:44:35 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,5 +67,5 @@ void	init_env(t_data *data)
 			env_lstadd_back(&head, env_lstnew(key, value));
 		i++;
 	}
-	printf("passed\n");
+	printf("passed\n\n");
 }
