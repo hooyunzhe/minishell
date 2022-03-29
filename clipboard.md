@@ -27,6 +27,19 @@
 - echo "$USER"'$USER'
 - echo "'test' $USER "hello ' $USER"world"'test
 
+## TO NOT FIX
+
+## Quotes in env_vars
+- export sq="'"
+- echo $sq test$sq'hello'world
+- export dq='"'
+- echo $dq test$dq'hello'world
+
+## Trimming spaces in env_vars when not within quotes
+- export bad="     bad     "
+- echo $bad
+- echo "$bad"
+
 ## redirection
 
 cat > outfile < Makefile
@@ -35,11 +48,7 @@ cat > outfile > outfile2 < Makefile > outfile3 < outfile > outfile2 < src/minish
 
 cat >> outfile >> outfile2 < Makefile >> outfile3 < outfile > outfile2 < src/minishell/main.c
 
-0 > 0 1 2 3
-1,2,3 > X
 
-iq isd
-0  1 = 1
-0  0 = 0
-1  1 = 0
-1  0 = 1
+
+## To-do
+- return error when encounter \ or ; and unclosed quotes when parsing arguments
