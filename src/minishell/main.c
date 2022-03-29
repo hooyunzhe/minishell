@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:24:20 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/03/24 18:28:30 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/03/29 10:37:47 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	
 	data.envp = envp;
+	init_env(&data);
 	minishell(&data);
 	return (0);
 }

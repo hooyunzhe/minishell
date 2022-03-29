@@ -5,13 +5,13 @@ OBJ_DIR		= obj
 LIBFT_DIR	= src/libft
 INC_DIR		= inc
 
-SRC_FILES	= main.c minishell.c parser.c
+SRC_FILES	= main.c minishell.c parser.c init_env.c
 
 OBJ_FILES	= ${addprefix ${OBJ_DIR}/, ${SRC_FILES:.c=.o}}
 
 GCC			= gcc
 CFLAGS		= -Wall -Wextra -Werror
-SANITIZE	= -g fsanitize=address
+SANITIZE	= -g -fsanitize=address
 RM			= rm -f
 
 LIBFT		= $(LIBFT_DIR)/libft.a
@@ -26,7 +26,7 @@ $(LIBFT):
 	make -C ${LIBFT_DIR}
 
 ${NAME}:	${LIBFT} ${OBJ_FILES}
-	${GCC} -o ${NAME} ${OBJ_FILES} $(LIBRARIES)
+	${GCC} -o ${NAME} ${OBJ_FILES} $(LIBRARIES) $(SANITIZE) $(CFLAGS)
 
 test: all
 	@./$(NAME) 

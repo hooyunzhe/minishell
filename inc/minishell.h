@@ -67,5 +67,6 @@ typedef struct s_data
 
 int		minishell(t_data *data);
 void	parser(t_data *data, char *line);
+void	init_env(t_data *data);	
 
 #endif
