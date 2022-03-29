@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:24:20 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/03/29 10:37:47 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/03/29 17:27:50 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,17 @@ int	main(int argc, char **argv, char **envp)
 	
 	data.envp = envp;
 	init_env(&data);
-	minishell(&data);
+	//minishell(&data);
+
+	mini_env(&data);
+	printf("\n\n");
+	mini_export(&data, "test", "motherfucker");
+	mini_export(&data, "test2", "motherfucker2");
+	mini_env(&data);
+	printf("\n\n");
+	mini_unset(&data, "test2");
+	mini_env(&data);
+	//printf("%s\n", get_mini_env(&data, "COLORTERM"));
 	return (0);
 }
 

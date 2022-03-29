@@ -6,48 +6,11 @@
 /*   By: nfernand <nfernand@student.42kl.edu.m      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 10:37:55 by nfernand          #+#    #+#             */
-/*   Updated: 2022/03/29 11:44:35 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/03/29 12:28:09 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_envp	*env_lstnew(char *key, char *value)
-{
-	t_envp	*node;
-
-	node = malloc(sizeof(t_envp));
-	node->key = ft_strdup(key);
-	node->value = ft_substr(value, 1, ft_strlen(value));
-	printf("%s", node->key);
-	printf("=%s\n", node->value);
-	node->next = NULL;
-
-	return (node);
-}
-
-t_envp	*env_lstlast(t_envp *lst)
-{
-	while (lst)
-	{
-		if (!lst->next)
-			return (lst);
-		else
-			lst = lst->next;
-	}
-	return (lst);
-}
-
-void	env_lstadd_back(t_envp **lst, t_envp *new)
-{
-	if (lst)
-	{
-		if (*lst)
-			env_lstlast(*lst)->next = new;
-		else
-			*lst = new;
-	}
-}
 
 void	init_env(t_data *data)
 {
@@ -62,10 +25,10 @@ void	init_env(t_data *data)
 		value = ft_strnstr(data->envp[i], "=", ft_strlen(data->envp[i]));
 		key = ft_substr(data->envp[i], 0 ,ft_strlen(data->envp[i]) - ft_strlen(value));
 		if (i == 0)
-			head = env_lstnew(key, value);
+			head = env_lstnew(key, value + 1);
 		else
-			env_lstadd_back(&head, env_lstnew(key, value));
+			env_lstadd_back(&head, env_lstnew(key, value + 1));
 		i++;
 	}
-	printf("passed\n\n");
+	data->mini_envp = head;
 }

@@ -69,4 +69,18 @@ int		minishell(t_data *data);
 void	parser(t_data *data, char *line);
 void	init_env(t_data *data);	
 
+// ---------- env linked list functions ---------
+
+t_envp	*env_lstnew(char *key, char *value);
+t_envp	*env_lstlast(t_envp *lst);
+void	env_lstadd_back(t_envp **lst, t_envp *new);
+void	env_lstdelnext(t_envp *head);
+
+// ---------- get env functions ------------
+
+void	mini_env(t_data *data);
+char	*get_mini_env(t_data *data, char *key);
+void	mini_export(t_data *data, char *key, char *value);
+void	mini_unset(t_data *data, char *key);
+
 #endif
