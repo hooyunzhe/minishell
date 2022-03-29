@@ -83,4 +83,10 @@ char	*get_mini_env(t_data *data, char *key);
 void	mini_export(t_data *data, char *key, char *value);
 void	mini_unset(t_data *data, char *key);
 
+
+//----------- directory functions ---------
+
+void	mini_pwd(void);
+void	mini_chdir(t_data *data, char *path);
+
 #endif

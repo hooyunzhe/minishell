@@ -51,4 +51,14 @@ cat >> outfile >> outfile2 < Makefile >> outfile3 < outfile > outfile2 < src/min
 
 
 ## To-do
+
+###parsing
 - return error when encounter \ or ; and unclosed quotes when parsing arguments
+
+###cd
+- cd no argument return to root
+- cd multiple arguments has special message
+- cd with 2 arguemts 
+	- [title]https://github.com/ohmyzsh/ohmyzsh/issues/6452
+- cd with > 2 arguemts
+
