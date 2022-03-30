@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:24:20 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/03/29 19:04:21 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/03/30 14:45:20 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,20 @@ int	main(int argc, char **argv, char **envp)
 	//mini_env(&data);
 	//printf("\n");
 	//char	*test = "\"../\" \"src\"";
-	//mini_chdir(&data, test);
+	//printf("PWD=%s\n", get_mini_env(&data, "PWD"));
+	//printf("OLDPWD=%s\n", get_mini_env(&data, "OLDPWD"));
+	//mini_chdir(&data, "../");
+	//printf("PWD=%s\n", get_mini_env(&data, "PWD"));
+	//printf("OLDPWD=%s\n", get_mini_env(&data, "OLDPWD"));
+	//mini_chdir(&data, "\'-\'");
+	////printf("\n");
+	//printf("PWD=%s\n", get_mini_env(&data, "PWD"));
+	//printf("OLDPWD=%s\n", get_mini_env(&data, "OLDPWD"));
+	
+	mini_chdir(&data, "");
 	//printf("\n");
-	//mini_env(&data);
+	printf("PWD=%s\n", get_mini_env(&data, "PWD"));
+	printf("OLDPWD=%s\n", get_mini_env(&data, "OLDPWD"));
 	return (0);
 }
 
