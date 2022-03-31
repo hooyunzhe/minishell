@@ -6,7 +6,7 @@
 /*   By: nfernand <nfernand@student.42kl.edu.m      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 11:53:32 by nfernand          #+#    #+#             */
-/*   Updated: 2022/03/29 17:27:19 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/03/31 10:50:15 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,24 @@ void	mini_unset(t_data *data, char *key)
 void	mini_export(t_data *data, char *key, char *value)
 {
 	t_envp	*head;
+	int		arg_count;
 
-	head = data->mini_envp;
-	env_lstadd_back(&head, env_lstnew(key, value));
+	arg_count = 0;
+	if (arg_count == 0)
+	{
+		head = data->mini_envp;
+		while (head)
+		{
+			if (ft_strncmp(head->key, "_", 1))
+				printf("declare -x %s=\"%s\"\n", head->key, head->value);
+			head = head->next;
+		}
+	}
+	else
+	{
+		head = data->mini_envp;
+		env_lstadd_back(&head, env_lstnew(key, value));
+	}
 }
 
 char	*get_mini_env(t_data *data, char *key)
