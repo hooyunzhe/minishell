@@ -269,8 +269,8 @@ void	check_input(t_data *data, char *line)
 	modified_line = get_unquoted_line(modified_line);
 	printf("unquoted line = %s\n", modified_line);
 	// no_redirection = save_redirections(data, line);
-	save_arguments(data, modified_line);
-	print_args(data);
+	//save_arguments(data, modified_line);
+	//print_args(data);
 }
 
 void	parser(t_data *data, char *line)

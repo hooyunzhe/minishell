@@ -16,12 +16,14 @@ SANITIZE	= -g -fsanitize=address
 RM			= rm -f
 
 LIBFT		= $(LIBFT_DIR)/libft.a
-LIBRARIES	= -L${LIBFT_DIR} -lft -lreadline
+LIBRARIES	= -L${LIBFT_DIR} -lft -lreadline -L/usr/local/opt/readline/lib
+
+INC_RL		= -I/usr/local/opt/readline/include
 
 all:	$(NAME)
 
 $(OBJ_DIR)/%.o:		$(SRC_DIR)/%.c
-	$(GCC) $(CFLAGS) -I $(INC_DIR) -c $< -o $@
+	$(GCC) $(CFLAGS) -I $(INC_DIR) $(INC_RL) -c $< -o $@
 
 $(LIBFT):
 	make -C ${LIBFT_DIR}
