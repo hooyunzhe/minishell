@@ -16,6 +16,15 @@
 # include <curses.h> // tgetent tgetflag tgetnumt getstr tgoto tputs
 # include <term.h>
 
+# define COMMAND 0
+# define OPTION 1
+# define ARGUMENT 2
+
+# define CLOSED 0
+# define SINGLE 1
+# define DOUBLE 2
+# define NORMAL 3
+
 typedef struct s_param t_param;
 typedef struct s_infile t_infile;
 typedef struct s_outfile t_outfile;
@@ -29,23 +38,9 @@ typedef struct s_param
 	t_param	*next;
 }			t_param;
 
-typedef struct s_infile
-{
-	char		*infile_str;
-	t_infile	*next;
-}				t_infile;
-
-typedef struct s_outfile
-{
-	char		*outfile_str;
-	t_outfile	*next;
-}				t_outfile;
-
 typedef struct s_cmd
 {
 	t_param		*params;
-	t_infile	*infiles;
-	t_outfile	*outfiles;
 	t_cmd		*next;
 }				t_cmd;
 
@@ -59,13 +54,17 @@ typedef struct s_envp
 typedef struct s_data
 {
 	char	**envp;
-	char	**args;
-	int		arg_count;
 	t_cmd	*cmds;
 	t_envp	*mini_envp;
 }			t_data;
 
-int		minishell(t_data *data);
-void	parser(t_data *data, char *line);
+t_data		*init_data(char **envp);
+t_cmd		*init_cmd(void);
+t_param		*init_param(void);
+void		append_cmd(t_cmd **cmd, t_cmd *new_cmd);
+void		append_param(t_param *param, char *param_str);
+void		free_data(t_data *data);
+int			minishell(t_data *data);
+void		parser(t_data *data, char *line);
 
 #endif

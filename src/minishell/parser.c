@@ -1,63 +1,95 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
+/*   Updated: 2022/04/04 15:43:29 by hyun-zhe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	print_args(t_data *data)
 {
-	int i;
-
-	i = 1;
-	while (i < data->arg_count)
+	while (data->cmds)
 	{
-		printf("%s ", data->args[i]);
-		// if (i != data->arg_count - 1)
-		// 	printf(", ");
-		i++;
+		while (data->cmds->params)
+		{
+			printf("%s ", data->cmds->params->param_str);
+			data->cmds->params = data->cmds->params->next;
+		}
+		data->cmds = data->cmds->next;
 	}
 	printf("\n");
 }
 
-int		is_quotations(char c)
+int	is_closed(int enclose_type, char current_char)
 {
-	if (c == '\'')
-		return (1);
-	else if (c == '\"')
-		return (2);
-	else if (c && c != ' ')
-		return (3);
-	return (0);
+	return ((enclose_type == 1 && current_char == '\'')
+		|| (enclose_type == 2 && current_char == '\"')
+		|| (enclose_type == 3 && (current_char == ' ')));
+		// || current_char == '\'' || current_char == '\"')));
 }
 
-int		is_valid_var(char c)
+int	get_enclose_type(int enclose_type, char current_char)
+{
+	if (enclose_type == CLOSED || enclose_type == NORMAL)
+	{
+		if (current_char == '\'')
+			return (SINGLE);
+		else if (current_char == '\"')
+			return (DOUBLE);
+		else if (current_char && current_char != ' ' && current_char != '|')
+			return (NORMAL);
+	}
+	else if (is_closed(enclose_type, current_char))
+	{
+		// if (enclose_type != 3 || current_char == ' ')
+			return (CLOSED);
+		// else if (current_char == '\'')
+		// 	return (SINGLE);
+		// else if (current_char == '\"')
+		// 	return (DOUBLE);
+	}
+	return (enclose_type);
+}
+
+int	is_valid_var(char c)
 {
 	if (ft_isalnum(c) || c == '_')
 		return (1);
 	return (0);
 }
 
-void	count_arguments(t_data *data, char *line)
+int	check_input(char *str)
 {
-	int i;
-	int is_quotes;
+	int	i;
+	int	opened;
 
 	i = 0;
-	is_quotes = is_quotations(line[0]);
-	if (is_quotes == 1 || is_quotes == 2)
-		i++;
-	while (line[i])
+	opened = 0;
+	while (str[i])
 	{
-		if ((is_quotes == 1 && line[i] == '\'') || (is_quotes == 2 && line[i] == '\"')
-			|| ((is_quotes == 3 && line[i] == ' ') || !line[i + 1]))
+		if (opened == 0)
 		{
-			data->arg_count++;
-			i += (is_quotes != 3);
-			is_quotes = 0;
+			if (str[i] == '\'')
+				opened = 1;
+			else if (str[i] == '\"')
+				opened = 2;
 		}
-		else if (!is_quotes)
-			is_quotes = is_quotations(line[i]);
+		else if (opened == 1 && str[i] == '\'')
+			opened = 0;
+		else if (opened == 2 && str[i] == '\"')
+			opened = 0;
 		i++;
 	}
+	return (opened == 1 || opened == 2);
 }
 
-int		get_envlen(char *line, int *index)
+int	get_envlen(char *line, int *index)
 {
 	int	i;
 	int len;
@@ -102,26 +134,22 @@ int	get_expanded_len(char *line)
 	return (len + 1);
 }
 
-char	*get_expanded_line(char *line)
+char	*get_expanded_param(char *line)
 {
 	int		i;
 	int		j;
 	char	*expanded_line;
 	char	*env_var;
-	int		is_quotes;
+	int		enclose_type;
 
 	expanded_line = malloc(get_expanded_len(line) * sizeof(char));
 	i = 0;
 	j = 0;
-	is_quotes = 0;
+	enclose_type = CLOSED;
 	while (line[i])
 	{
-		if (is_quotes == 0 && is_quotations(line[i]))
-			is_quotes = is_quotations(line[i]);
-		else if ((is_quotes == 1 && line[i] == '\'') || (is_quotes == 2 && line[i] == '\"')
-			|| (is_quotes == 3 && line[i] == ' '))
-			is_quotes = 0;
-		if (line[i] == '$' && is_quotes != 1)
+		enclose_type = get_enclose_type(enclose_type, line[i]);
+		if (line[i] == '$' && enclose_type != SINGLE)
 		{
 			if (line[i + 1] && ft_isdigit(line[i + 1]))
 			{
@@ -141,6 +169,7 @@ char	*get_expanded_line(char *line)
 		i++;
 	}
 	expanded_line[j] = '\0';
+	free(line);
 	return (expanded_line);
 }
 
@@ -148,132 +177,164 @@ int	get_unquoted_len(char *line)
 {
 	int		i;
 	int		count;
-	int		is_quotes;
+	int		enclose_type;
 
 	i = 0;
 	count = 0;
-	is_quotes = 0;
+	enclose_type = CLOSED;
 	while (line[i])
 	{
-		if (is_quotes == 0 && is_quotations(line[i]))
+		// printf("count: %d, line[i]: %c, enclose_type: %d\n", count, line[i], enclose_type);
+		if (is_closed(enclose_type, line[i]) || !line[i + 1])
 		{
-			is_quotes = is_quotations(line[i]);
-			if (is_quotes == 1 || is_quotes == 2)
-				i++;
+			if (line[i + 1] != ' ')
+				count -= 2 * (enclose_type == SINGLE || enclose_type == DOUBLE);
+			// else if (!line[i + 1] || line[i + 1] == ' ')
+			// 	count += 2 * (enclose_type == SINGLE || enclose_type == DOUBLE);
 		}
-		if ((is_quotes == 1 && line[i] == '\'') || (is_quotes == 2 && line[i] =='\"')
-			|| (is_quotes == 3 && line[i] == ' '))
-		{
-			if (is_quotes == 3)
-				count++;
-			else
-				count += 2;
-			is_quotes = 0;
-		}
-		else
-			count++;
+		count++;
+		enclose_type = get_enclose_type(enclose_type, line[i]);
 		i++;
 	}
+	// printf("count: %d, line[i]: %c, enclose_type: %d\n", count, line[i], enclose_type);
+	// printf("count: %d\n", count);
 	return (count);
 }
 
-char	*get_unquoted_line(char *line)
+char	*get_unquoted_param(char *line)
 {
-	char	*res;
 	int		i;
 	int		j;
-	int		is_quotes;
-	int		is_ended;
+	int		enclose_type;
+	char	*unquoted_line;
 
 	i = 0;
 	j = 0;
-	is_quotes = 0;
-	res = malloc(sizeof(char) * (get_unquoted_len(line) + 1));
+	enclose_type = CLOSED;
+	unquoted_line = malloc(sizeof(char) * (get_unquoted_len(line) + 1));
 	while (line[i])
 	{
-		if (is_quotes == 0 && is_quotations(line[i]))
-		{
-			is_quotes = is_quotations(line[i]);
-			if ((is_quotes == 1 || is_quotes == 2) && i > 0 && line[i - 1] == ' ')
-			{
-				res[j++] = line[i];
-				is_ended = is_quotes;
-			}
-			if (is_quotes == 1 || is_quotes == 2)
-				i++;
-		}
-		if ((is_quotes == 1 && line[i] == '\'') || (is_quotes == 2 && line[i] =='\"')
-			|| (is_quotes == 3 && line[i] == ' ') || !line[i + 1])
-		{
-			// printf("[%c] ", line[i]);
-			if (is_quotes == 3)
-				res[j++] = line[i];
-			is_quotes = 0;
-		}
-		else
-			res[j++] = line[i];
-		if ((!line[i + 1] && is_quotes == 0) || (line[i + 1] == ' ' && is_quotes == 3))
-		{
-			if (is_ended == 2)
-				res[j++] = '\"';
-			else if (is_ended == 1)
-				res[j++] = '\'';
-			is_ended = 0;
-		}
+		if ((line[i] != '\'' && line[i] != '\"')
+			|| (enclose_type == SINGLE && line[i] == '\"')
+			|| (enclose_type == DOUBLE && line[i] == '\''))
+			unquoted_line[j++] = line[i];
+		// if ((line[i] != '\'' && line[i] != '\"')
+		// 	&& (line[i + 1] == '\'' || line[i + 1] == '\"'))
+		// 	unquoted_line[j++] = '\"';
+		enclose_type = get_enclose_type(enclose_type, line[i]);
 		i++;
 	}
-	res[j] = '\0';
+	unquoted_line[j] = '\0';
 	free(line);
-	return (res);
+	return (unquoted_line);
 }
 
-void	save_arguments(t_data *data, char *line)
+void	get_param(t_cmd *cmd, char *param)
 {
-	int i;
-	int j;
-	int	len;
-	int	is_quotes;
+	char	*modified_param;
+	// t_cmd	*new_cmd;
+	
+	modified_param = get_expanded_param(param);
+	modified_param = get_unquoted_param(modified_param);
+	// new_cmd = init_cmd(modified_param, );
+	append_param(cmd->params, modified_param);
+}
 
-	i = -1;
-	j = 0;
+t_cmd	*get_cmd(t_data *data, char *line)
+{
+	int		i;
+	int		len;
+	int		enclose_type;
+	t_cmd	*cmd;
+
+	i = 0;
 	len = 0;
-	data->args = malloc(data->arg_count * sizeof(char *));
-	is_quotes = 0;
-	while (line[++i])
+	enclose_type = CLOSED;
+	cmd = init_cmd();
+	(void)data;
+	while (line[i])
 	{
-		if (is_quotes == 0)
-			is_quotes = is_quotations(line[i]);
-		else if ((is_quotes == 1 && line[i] == '\'') || (is_quotes == 2 && line[i] == '\"')
-			|| (is_quotes == 3 && (line[i] == ' ' || !line[i + 1])))
+		// printf("i: %d, len: %d, line[i]: %c, enclose_type: %d\n", i, len, line[i], enclose_type);
+		len += (line[i] != ' ' || (enclose_type && enclose_type != NORMAL));
+		if ((is_closed(enclose_type, line[i]) || enclose_type == NORMAL)
+			&& (line[i + 1] == ' ' || !line[i + 1]))
 		{
-			if (is_quotes == 1 || is_quotes == 2)
-				len--;
-			data->args[j++] = ft_substr(line, i - len, len + (!line[i + 1] && is_quotes == 3));
-			i += (line[i + 1] && (is_quotes == 1 || is_quotes == 2));
-			is_quotes = 0;
+			get_param(cmd, ft_substr(line, i - len + 1, len));
 			len = 0;
 		}
-		if (is_quotes != 0)
-			len++;
+		enclose_type = get_enclose_type(enclose_type, line[i]);
+		i++;
 	}
+	return (cmd);
 }
 
-void	check_input(t_data *data, char *line)
+int		get_cmd_count(char *line)
 {
-	char	*modified_line;
-	// char	*no_redirection;
+	int	i;
+	int	len;
+	int	enclose_type;
 
-	count_arguments(data, line);
-	modified_line = get_expanded_line(line);
-	printf("expanded_line: %s\n", modified_line);
-	modified_line = get_unquoted_line(modified_line);
-	printf("unquoted line = %s\n", modified_line);
-	// no_redirection = save_redirections(data, line);
-	// save_arguments(data, modified_line);
-	// print_args(data);
+	i = 0;
+	len = 0;
+	enclose_type = CLOSED;
+	while (line[i])
+	{
+		enclose_type = get_enclose_type(enclose_type, line[0]);
+		if (((enclose_type == CLOSED || enclose_type == NORMAL)
+			&& line[i] == '|') || !line[i + 1])
+			len++;
+		i++;
+	}
+	return (len + (line[i - 1] != '|'));
+}
+
+char	**get_cmd_strs(char *line)
+{
+	int		i;
+	int		j;
+	int		len;
+	int		enclose_type;
+	char	**cmd_strs;
+
+	i = 0;
+	j = 0;
+	len = 0;
+	enclose_type = CLOSED;
+	cmd_strs = malloc((get_cmd_count(line) + 1) * sizeof(char *));
+	while (line[i])
+	{
+		enclose_type = get_enclose_type(enclose_type, line[i]);
+		if (((enclose_type == CLOSED || enclose_type == NORMAL)
+			&& line[i] == '|') || !line[i + 1])
+		{
+			cmd_strs[j++] = ft_substr(line, i - len, len + (!line[i + 1]));
+			len = 0;
+		}
+		else
+			len++;
+		i++;
+	}
+	cmd_strs[j] = NULL;
+	return (cmd_strs);
 }
 
 void	parser(t_data *data, char *line)
 {
-	check_input(data, line);
+	int		i;
+	char	**cmd_strs;
+
+	i = 0;
+	cmd_strs = get_cmd_strs(line);
+	while (cmd_strs[i])
+	{
+		// printf("cmd_str: %s\n", cmd_strs[i]);
+		if (check_input(line))
+			break ;
+		append_cmd(&data->cmds, get_cmd(data, line));
+		i++;
+	}
+	i = 0;
+	while (cmd_strs[i])
+		free(cmd_strs[i++]);
+	free(cmd_strs);
 }

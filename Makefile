@@ -5,7 +5,7 @@ OBJ_DIR		= obj
 LIBFT_DIR	= src/libft
 INC_DIR		= inc
 
-SRC_FILES	= main.c minishell.c parser.c
+SRC_FILES	= main.c minishell.c parser.c init.c free.c append.c
 
 OBJ_FILES	= ${addprefix ${OBJ_DIR}/, ${SRC_FILES:.c=.o}}
 
@@ -15,12 +15,12 @@ SANITIZE	= -g fsanitize=address
 RM			= rm -f
 
 LIBFT		= $(LIBFT_DIR)/libft.a
-LIBRARIES	= -L${LIBFT_DIR} -lft -lreadline
+LIBRARIES	= -L${LIBFT_DIR} -L/usr/local/opt/readline/lib -lft -lreadline
 
 all:	$(NAME)
 
 $(OBJ_DIR)/%.o:		$(SRC_DIR)/%.c
-	$(GCC) $(CFLAGS) -I $(INC_DIR) -c $< -o $@
+	$(GCC) $(CFLAGS) -I $(INC_DIR) -I/usr/local/opt/readline/include -c $< -o $@
 
 $(LIBFT):
 	make -C ${LIBFT_DIR}

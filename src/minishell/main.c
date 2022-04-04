@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:24:20 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/03/24 18:28:30 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/04 11:20:44 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_data	data;
+	t_data	*data;
 	
 	(void)argv;
 	(void)argc;
-	
-	data.envp = envp;
-	minishell(&data);
+	data = init_data(envp);
+	minishell(data);
+	free_data(data);
 	return (0);
 }
 
