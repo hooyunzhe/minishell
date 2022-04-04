@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/04 15:43:29 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/04 17:35:10 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,15 +229,27 @@ char	*get_unquoted_param(char *line)
 	return (unquoted_line);
 }
 
-void	get_param(t_cmd *cmd, char *param)
+param	get_param_type(char *param_str)
 {
+	if (param_str[0] == '-')
+		return (OPTION);
+	else if (param_str[0] == '<' || param_str[0] == '>')
+		return (REDIRECTION);
+	return (ARGUMENT);
+}
+
+void	get_param(t_cmd *cmd, char *param_str)
+{
+	param	param_type;
 	char	*modified_param;
-	// t_cmd	*new_cmd;
+	t_param	*current_param;
 	
-	modified_param = get_expanded_param(param);
+	
+	param_type = get_param_type(param_str);
+	modified_param = get_expanded_param(param_str);
 	modified_param = get_unquoted_param(modified_param);
-	// new_cmd = init_cmd(modified_param, );
-	append_param(cmd->params, modified_param);
+	current_param = new_param(modified_param, param_type);
+	param_lstadd_back(&cmd->params, current_param);
 }
 
 t_cmd	*get_cmd(t_data *data, char *line)
@@ -250,7 +262,7 @@ t_cmd	*get_cmd(t_data *data, char *line)
 	i = 0;
 	len = 0;
 	enclose_type = CLOSED;
-	cmd = init_cmd();
+	cmd = new_cmd();
 	(void)data;
 	while (line[i])
 	{
@@ -323,14 +335,15 @@ void	parser(t_data *data, char *line)
 	int		i;
 	char	**cmd_strs;
 
+	(void)data;
 	i = 0;
 	cmd_strs = get_cmd_strs(line);
 	while (cmd_strs[i])
 	{
-		// printf("cmd_str: %s\n", cmd_strs[i]);
+		printf("cmd_str: %s\n", cmd_strs[i]);
 		if (check_input(line))
 			break ;
-		append_cmd(&data->cmds, get_cmd(data, line));
+		cmd_lstadd_back(&data->cmds, get_cmd(data, cmd_strs[i]));
 		i++;
 	}
 	i = 0;

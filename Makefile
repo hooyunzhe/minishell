@@ -5,7 +5,7 @@ OBJ_DIR		= obj
 LIBFT_DIR	= src/libft
 INC_DIR		= inc
 
-SRC_FILES	= main.c minishell.c parser.c init.c free.c append.c
+SRC_FILES	= main.c minishell.c parser.c param_lstfunc.c param_newfunc.c free.c
 
 OBJ_FILES	= ${addprefix ${OBJ_DIR}/, ${SRC_FILES:.c=.o}}
 

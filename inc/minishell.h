@@ -16,9 +16,23 @@
 # include <curses.h> // tgetent tgetflag tgetnumt getstr tgoto tputs
 # include <term.h>
 
-# define COMMAND 0
-# define OPTION 1
-# define ARGUMENT 2
+typedef enum param
+{
+	COMMAND,
+	OPTION,
+	ARGUMENT,
+	REDIRECTION,
+	IO_FILE
+}	param;
+
+typedef enum redirection
+{	
+	S_IN,
+	S_OUT,
+	D_IN,
+	D_OUT
+}	redirection;
+
 
 # define CLOSED 0
 # define SINGLE 1
@@ -33,9 +47,10 @@ typedef struct s_envp t_envp;
 
 typedef struct s_param
 {
-	int		param_type;
-	char	*param_str;
-	t_param	*next;
+	param		param_type;
+	redirection	redirection_type;
+	char		*param_str;
+	t_param		*next;
 }			t_param;
 
 typedef struct s_cmd
@@ -58,11 +73,11 @@ typedef struct s_data
 	t_envp	*mini_envp;
 }			t_data;
 
-t_data		*init_data(char **envp);
-t_cmd		*init_cmd(void);
-t_param		*init_param(void);
-void		append_cmd(t_cmd **cmd, t_cmd *new_cmd);
-void		append_param(t_param *param, char *param_str);
+void		param_lstadd_back(t_param **param, t_param *new_param);
+void		cmd_lstadd_back(t_cmd **cmd, t_cmd *new_cmd);
+t_param		*new_param(char *param_str, param param_type);
+t_cmd		*new_cmd(void);
+t_data		*new_data(char **envp);
 void		free_data(t_data *data);
 int			minishell(t_data *data);
 void		parser(t_data *data, char *line);

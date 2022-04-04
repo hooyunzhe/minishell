@@ -48,6 +48,9 @@ cat > outfile > outfile2 < Makefile > outfile3 < outfile > outfile2 < src/minish
 
 cat >> outfile >> outfile2 < Makefile >> outfile3 < outfile > outfile2 < src/minishell/main.c
 
+## parsing: single character in the beginning
+< test.txt echo hello
+e test (invalid)
 
 
 ## To-do
