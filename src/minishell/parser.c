@@ -4,10 +4,10 @@ void	print_args(t_data *data)
 {
 	int i;
 
-	i = 1;
+	i = 0;
 	while (i < data->arg_count)
 	{
-		printf("%s ", data->args[i]);
+		printf("[%s] ", data->args[i]);
 		// if (i != data->arg_count - 1)
 		// 	printf(", ");
 		i++;
@@ -269,8 +269,8 @@ void	check_input(t_data *data, char *line)
 	modified_line = get_unquoted_line(modified_line);
 	printf("unquoted line = %s\n", modified_line);
 	// no_redirection = save_redirections(data, line);
-	// save_arguments(data, modified_line);
-	// print_args(data);
+	save_arguments(data, modified_line);
+	print_args(data);
 }
 
 void	parser(t_data *data, char *line)

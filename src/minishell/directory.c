@@ -6,7 +6,7 @@
 /*   By: nfernand <nfernand@student.42kl.edu.m      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 17:40:52 by nfernand          #+#    #+#             */
-/*   Updated: 2022/03/30 14:45:26 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/03/31 17:37:30 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ static char	*replace_str(char *str, char *s1, char *s2)
 	int		len;
 	char	*res;
 
-	(void)s2;
 	i = 0;
 	while (str[i])
 	{

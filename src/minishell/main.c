@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:24:20 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/03/31 10:46:35 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/03/31 17:21:28 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv, char **envp)
 	
 	data.envp = envp;
 	init_env(&data);
-	//minishell(&data);
+	minishell(&data);
 
 	//mini_env(&data);
 	//printf("\n\n");
@@ -51,7 +51,7 @@ int	main(int argc, char **argv, char **envp)
 //	printf("PWD=%s\n", get_mini_env(&data, "PWD"));
 //	printf("OLDPWD=%s\n", get_mini_env(&data, "OLDPWD"));
 	
-	mini_export(&data, NULL, NULL);
+	//mini_export(&data, NULL, NULL);
 	return (0);
 }
 
