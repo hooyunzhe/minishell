@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/04 17:35:10 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/05 16:07:44 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,7 @@ int	get_enclose_type(int enclose_type, char current_char)
 			return (NORMAL);
 	}
 	else if (is_closed(enclose_type, current_char))
-	{
-		// if (enclose_type != 3 || current_char == ' ')
-			return (CLOSED);
-		// else if (current_char == '\'')
-		// 	return (SINGLE);
-		// else if (current_char == '\"')
-		// 	return (DOUBLE);
-	}
+		return (CLOSED);
 	return (enclose_type);
 }
 
@@ -126,7 +119,7 @@ int	get_expanded_len(char *line)
 	while (line[i])
 	{
 		if (line[i] == '$')
-			len += get_envlen(line, &i);
+			len += get_envlen(line, &i) + 2;
 		else
 			len++;
 		i++;
@@ -159,8 +152,16 @@ char	*get_expanded_param(char *line)
 			else
 			{	
 				env_var = get_envvar(line, i + 1);
+				if (ft_strchr(getenv(env_var), '\"') == NULL)
+					expanded_line[j++] = '\"';
+				else if (ft_strchr(getenv(env_var), '\'') == NULL)
+					expanded_line[j++] = '\'';
 				ft_memmove(&(expanded_line[j]), getenv(env_var), get_envlen(line, &i));
 				j += ft_strlen(getenv(env_var));
+				if (ft_strchr(getenv(env_var), '\"') == NULL)
+					expanded_line[j++] = '\"';
+				else if (ft_strchr(getenv(env_var), '\'') == NULL)
+					expanded_line[j++] = '\'';
 				free(env_var);
 			}
 		}
@@ -184,20 +185,15 @@ int	get_unquoted_len(char *line)
 	enclose_type = CLOSED;
 	while (line[i])
 	{
-		// printf("count: %d, line[i]: %c, enclose_type: %d\n", count, line[i], enclose_type);
 		if (is_closed(enclose_type, line[i]) || !line[i + 1])
 		{
 			if (line[i + 1] != ' ')
 				count -= 2 * (enclose_type == SINGLE || enclose_type == DOUBLE);
-			// else if (!line[i + 1] || line[i + 1] == ' ')
-			// 	count += 2 * (enclose_type == SINGLE || enclose_type == DOUBLE);
 		}
 		count++;
 		enclose_type = get_enclose_type(enclose_type, line[i]);
 		i++;
 	}
-	// printf("count: %d, line[i]: %c, enclose_type: %d\n", count, line[i], enclose_type);
-	// printf("count: %d\n", count);
 	return (count);
 }
 
@@ -218,9 +214,6 @@ char	*get_unquoted_param(char *line)
 			|| (enclose_type == SINGLE && line[i] == '\"')
 			|| (enclose_type == DOUBLE && line[i] == '\''))
 			unquoted_line[j++] = line[i];
-		// if ((line[i] != '\'' && line[i] != '\"')
-		// 	&& (line[i + 1] == '\'' || line[i + 1] == '\"'))
-		// 	unquoted_line[j++] = '\"';
 		enclose_type = get_enclose_type(enclose_type, line[i]);
 		i++;
 	}
@@ -233,23 +226,52 @@ param	get_param_type(char *param_str)
 {
 	if (param_str[0] == '-')
 		return (OPTION);
-	else if (param_str[0] == '<' || param_str[0] == '>')
+	else if (!ft_strncmp(param_str, "<", ft_strlen(param_str))
+		|| !ft_strncmp(param_str, ">", ft_strlen(param_str))
+		|| !ft_strncmp(param_str, "<<", ft_strlen(param_str))
+		|| !ft_strncmp(param_str, ">>", ft_strlen(param_str)))
 		return (REDIRECTION);
 	return (ARGUMENT);
 }
 
+redirection	get_redirection_type(char *param_str, param param_type)
+{
+	if (param_type == REDIRECTION)
+	{
+		if (!ft_strncmp(param_str, "<", ft_strlen(param_str)))
+			return (S_IN);
+		else if (!ft_strncmp(param_str, ">", ft_strlen(param_str)))
+			return (S_OUT);
+		else if (!ft_strncmp(param_str, "<<", ft_strlen(param_str)))
+			return (D_IN);
+		else if (!ft_strncmp(param_str, ">>", ft_strlen(param_str)))
+			return (D_OUT);
+	}
+	return (-1);
+}
+
 void	get_param(t_cmd *cmd, char *param_str)
 {
-	param	param_type;
-	char	*modified_param;
-	t_param	*current_param;
+	param		param_type;
+	redirection	redirection_type;
+	char		*modified_param;
+	t_param		*current_param;
 	
 	
 	param_type = get_param_type(param_str);
-	modified_param = get_expanded_param(param_str);
+	redirection_type = get_redirection_type(param_str, param_type);
+	modified_param = ft_strdup(param_str);
+	if (!cmd->params || (param_lstlast(cmd->params))->redirection_type != D_IN)
+	{
+		modified_param = get_expanded_param(modified_param);
+		printf("expanded param: %s\n", modified_param);
+	}
+	printf("END\n");
 	modified_param = get_unquoted_param(modified_param);
-	current_param = new_param(modified_param, param_type);
-	param_lstadd_back(&cmd->params, current_param);
+	printf("unquoted param: %s\n", modified_param);
+	current_param = new_param(modified_param, param_type, redirection_type);
+	param_lstadd_back(&cmd->params, current_param); 
+	cmd->param_count++;
 }
 
 t_cmd	*get_cmd(t_data *data, char *line)

@@ -55,6 +55,7 @@ typedef struct s_param
 
 typedef struct s_cmd
 {
+	int			param_count;
 	t_param		*params;
 	t_cmd		*next;
 }				t_cmd;
@@ -73,9 +74,10 @@ typedef struct s_data
 	t_envp	*mini_envp;
 }			t_data;
 
+t_param		*param_lstlast(t_param *param);
 void		param_lstadd_back(t_param **param, t_param *new_param);
 void		cmd_lstadd_back(t_cmd **cmd, t_cmd *new_cmd);
-t_param		*new_param(char *param_str, param param_type);
+t_param		*new_param(char *param_str, param param_type, redirection redirection_type);
 t_cmd		*new_cmd(void);
 t_data		*new_data(char **envp);
 void		free_data(t_data *data);

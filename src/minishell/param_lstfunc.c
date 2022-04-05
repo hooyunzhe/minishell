@@ -6,11 +6,18 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 11:33:08 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/04 17:39:54 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/05 16:02:47 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_param	*param_lstlast(t_param *param)
+{
+	while (param && param->next != NULL)
+		param = param->next;
+	return (param);
+}
 
 void	param_lstadd_back(t_param **param, t_param *new_param)
 {
