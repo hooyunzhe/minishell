@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 10:52:26 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/05 15:15:07 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/06 14:06:06 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ t_cmd	*new_cmd(void)
 	cmds = malloc(sizeof(t_cmd));
 	cmds->params = NULL;
 	cmds->next = NULL;
+	cmds->param_count = 0;
+	cmds->arg_count = 0;
 	return (cmds);
 }
 

@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:24:20 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/06 10:42:02 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/04/06 13:54:24 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	data = new_data(envp);
 	init_env(data);
-	minishell(data);
-	free_data(data);
 
 	//mini_env(&data);
 	//printf("\n\n");
@@ -33,6 +31,13 @@ int	main(int argc, char **argv, char **envp)
 	//mini_env(&data);
 	//printf("%s\n", get_mini_env(&data, "COLORTERM"));
 	
+
+	//printf("%d\n", ft_strncmp("-1mothercucker", "-", 1));
+
+	//mini_env(data);
+	//mini_chdir(data, data->cmds);
+	minishell(data);
+
 	//mini_env(&data);
 	//printf("\n");
 	//char	*test = "\"../\" \"src\"";
@@ -52,6 +57,12 @@ int	main(int argc, char **argv, char **envp)
 //	printf("OLDPWD=%s\n", get_mini_env(&data, "OLDPWD"));
 	
 	//mini_export(&data, NULL, NULL);
+
+
+
+
+	//minishell(data);
+	free_data(data);
 	return (0);
 }
 

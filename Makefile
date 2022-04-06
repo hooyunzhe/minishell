@@ -12,7 +12,7 @@ OBJ_FILES	= ${addprefix ${OBJ_DIR}/, ${SRC_FILES:.c=.o}}
 
 GCC			= gcc
 CFLAGS		= -Wall -Wextra -Werror
-SANITIZE	= -g -fsanitize=address
+SANITIZE	= -fsanitize=address -g3
 RM			= rm -f
 
 LIBFT		= $(LIBFT_DIR)/libft.a

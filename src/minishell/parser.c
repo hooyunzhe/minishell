@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/06 10:37:51 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/04/06 17:48:53 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,7 +224,7 @@ char	*get_unquoted_param(char *line)
 
 param	get_param_type(char *param_str)
 {
-	if (param_str[0] == '-')
+	if (param_str[0] == '-' && param_str[1])
 		return (OPTION);
 	else if (!ft_strncmp(param_str, "<", ft_strlen(param_str))
 		|| !ft_strncmp(param_str, ">", ft_strlen(param_str))
@@ -264,14 +264,13 @@ void	get_param(t_cmd *cmd, char *param_str)
 	if (!cmd->params || (param_lstlast(cmd->params))->redirection_type != D_IN)
 	{
 		modified_param = get_expanded_param(modified_param);
-		printf("expanded param: %s\n", modified_param);
+		//printf("expanded param: %s\n", modified_param);
 	}
-	printf("END\n");
+	//printf("END\n");
 	modified_param = get_unquoted_param(modified_param);
-	printf("unquoted param: %s\n", modified_param);
+	//printf("unquoted param: %s\n", modified_param);
 	current_param = new_param(modified_param, param_type, redirection_type);
 	param_lstadd_back(&cmd->params, current_param); 
-	cmd->param_count++;
 }
 
 t_cmd	*get_cmd(t_data *data, char *line)
@@ -291,7 +290,7 @@ t_cmd	*get_cmd(t_data *data, char *line)
 		// printf("i: %d, len: %d, line[i]: %c, enclose_type: %d\n", i, len, line[i], enclose_type);
 		len += (line[i] != ' ' || (enclose_type && enclose_type != NORMAL));
 		if ((is_closed(enclose_type, line[i]) || enclose_type == NORMAL)
-			&& (line[i + 1] == ' ' || !line[i + 1]))
+			&& (line[i + 1] == ' ' || !line[i + 1]) && len > 0)
 		{
 			get_param(cmd, ft_substr(line, i - len + 1, len));
 			len = 0;
@@ -362,7 +361,7 @@ void	parser(t_data *data, char *line)
 	cmd_strs = get_cmd_strs(line);
 	while (cmd_strs[i])
 	{
-		printf("cmd_str: %s\n", cmd_strs[i]);
+		//printf("cmd_str: %s\n", cmd_strs[i]);
 		if (check_input(line))
 			break ;
 		cmd_lstadd_back(&data->cmds, get_cmd(data, cmd_strs[i]));

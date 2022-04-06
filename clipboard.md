@@ -67,7 +67,8 @@ e test (invalid)
 	- [title]https://www.ibm.com/docs/en/zos/2.3.0?topic=descriptions-cd-change-working-directory
 - cd with > 2 arguemts
 - cd - (goes to OLDPWD)
+- cd no argument return to root
+- cd -n no option
 
 ### To-fix
-- cd no argument return to root
 

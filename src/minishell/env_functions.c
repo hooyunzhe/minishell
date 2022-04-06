@@ -6,7 +6,7 @@
 /*   By: nfernand <nfernand@student.42kl.edu.m      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 11:53:32 by nfernand          #+#    #+#             */
-/*   Updated: 2022/03/31 10:50:15 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/04/06 16:16:51 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	mini_export(t_data *data, char *key, char *value)
 	}
 }
 
-char	*get_mini_env(t_data *data, char *key)
+char	*mini_getenv(t_data *data, char *key)
 {
 	t_envp	*node;
 

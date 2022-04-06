@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfernand <nfernand@student.42kl.edu.m      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/29 17:40:52 by nfernand          #+#    #+#             */
-/*   Updated: 2022/03/31 17:37:30 by nfernand         ###   ########.fr       */
+/*   Created: 2022/04/06 17:22:14 by nfernand          #+#    #+#             */
+/*   Updated: 2022/04/06 17:45:00 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static char	*replace_str(char *str, char *s1, char *s2)
 {
-	int 	i;
+	int		i;
 	int		j;
 	int		len;
 	char	*res;
@@ -26,61 +26,28 @@ static char	*replace_str(char *str, char *s1, char *s2)
 		while (str[i + j] && s1[j] && str[i + j] == s1[j])
 			j++;
 		if (!s1[j])
-			break;
+			break ;
 		i++;
 	}
 	if (i == (int)ft_strlen(str))
 		return (NULL);
-	printf("\n");
-	printf("i = %d\n", i);
-	printf("before = [%.*s]\n", i + j - (int)ft_strlen(s1), str);
-	printf("after = [%s]\n\n", str + i + j);
 	len = ft_strlen(str) - ft_strlen(s1) + ft_strlen(s2);
 	res = malloc(sizeof(char) * len + 1);
-	ft_memmove(res, str , i + j - ft_strlen(s1));
-	ft_memmove(res + i + j - ft_strlen(s1), s2 , ft_strlen(s2));
-	ft_memmove(res + i + j - ft_strlen(s1) + ft_strlen(s2), str + i + j, ft_strlen(str) - i + j);
+	ft_memmove(res, str, i + j - ft_strlen(s1));
+	ft_memmove(res + i + j - ft_strlen(s1), s2, ft_strlen(s2));
+	ft_memmove(res + i + j - ft_strlen(s1) + ft_strlen(s2),
+		str + i + j, ft_strlen(str) - i + j);
 	res[len] = '\0';
-	printf("res = %s\n", res);
 	return (res);
 }
 
-void	mini_chdir(t_data *data, char *path)
+static void	update_env_pwd(t_data *data)
 {
-	t_envp	*node;
 	char	buff[200];
-	char	oldpath[200];
-	int		arg_count = 0;
+	char	*oldpath;
+	t_envp	*node;
 
-	getcwd(oldpath, 200);
-	printf("[%s]\n\n", path);
-	if (arg_count == 0)
-		path = "~";
-	if (arg_count == 2)
-	{
-		char	*old = "!";
-		char	*new = "test";
-		char	*PWD;
-		PWD = get_mini_env(data, "PWD");
-		printf("PWD = %s\nold = %s\nnew = %s\n",PWD, old, new);
-		char *temp = replace_str(PWD, old, new);
-
-		printf("combined = %s\n", temp);
-		if (!temp)
-			return ((void)printf("cd: string not in pwd: %s\n", old));
-		//printf("test  = %s\n", ft_strnstr(PWD, old, ft_strlen(PWD)));
-		//printf("PWD = [%s]\n", PWD);
-		//char *temp = ft_strnstr(PWD, old, ft_strlen(PWD));
-		//printf("temp = [%s]\n", temp);
-	}
-	if (arg_count > 2)
-		return ((void)printf("cd: too many arguments\n"));
-	if (((path[0] == '\'' || path[0] == '\"') && path[1] == '-') || path[0] == '-')
-		path = get_mini_env(data, "OLDPWD");
-	if (!ft_strncmp(path, "~", 1))
-		path = ft_strjoin(get_mini_env(data, "HOME"), path + 1);
-	if (chdir(path) == -1)
-		return ((void)printf("cd: no such file or directory: %s\n", path));
+	oldpath = ft_strdup(mini_getenv(data, "PWD"));
 	node = data->mini_envp;
 	while (node)
 	{
@@ -93,10 +60,59 @@ void	mini_chdir(t_data *data, char *path)
 		if (!ft_strncmp("OLDPWD", node->key, 6))
 		{
 			free(node->value);
-			node->value = ft_strdup(oldpath);
+			node->value = oldpath;
 		}
 		node = node->next;
 	}
+}
+
+static int	handle_replaced_path(t_data *data, t_cmd *cmd, char **path)
+{
+	char	*old;
+	char	*new;
+	char	*pwd;
+
+	old = cmd->params->next->param_str;
+	if (!ft_strncmp(old, "~", 1))
+		old = ft_strjoin(mini_getenv(data, "HOME"), old + 1);
+	new = cmd->params->next->next->param_str;
+	if (!ft_strncmp(new, "~", 1))
+		new = ft_strjoin(mini_getenv(data, "HOME"), new + 1);
+	pwd = mini_getenv(data, "PWD");
+	*path = replace_str(pwd, old, new);
+	if (!(*path))
+		return (printf("cd: string not in pwd: %s\n", old) * 0);
+	return (1);
+}	
+
+void	mini_chdir(t_data *data, t_cmd *cmd)
+{
+	char	*path;
+	char	*param_path;
+
+	if (cmd->arg_count > 2)
+		return ((void)printf("cd: too many arguments\n"));
+	else if (cmd->arg_count == 2)
+		if (!handle_replaced_path(data, cmd, &path))
+			return ;
+	if (cmd->arg_count == 1)
+	{
+		param_path = cmd->params->next->param_str;
+		if (!ft_strncmp(param_path, "-", 2))
+			path = mini_getenv(data, "OLDPWD");
+		else if (!ft_strncmp(param_path, "~", 1))
+			path = ft_strjoin(mini_getenv(data, "HOME"), param_path + 1);
+		else
+			path = param_path;
+	}
+	else if (cmd->arg_count == 0 && cmd->param_count > 1)
+		return ((void)printf("cd: no such file or directory: %s\n",
+				cmd->params->next->param_str));
+	else if (cmd->arg_count == 0)
+		path = mini_getenv(data, "HOME");
+	if (chdir(path) == -1)
+		return ((void)printf("cd: no such file or directory: %s\n", path));
+	update_env_pwd(data);
 }
 
 void	mini_pwd(void)

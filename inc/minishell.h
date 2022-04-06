@@ -56,6 +56,7 @@ typedef struct s_param
 typedef struct s_cmd
 {
 	int			param_count;
+	int			arg_count;
 	t_param		*params;
 	t_cmd		*next;
 }				t_cmd;
@@ -95,7 +96,7 @@ void	env_lstdelnext(t_envp *head);
 // ---------- get env functions ------------
 
 void	mini_env(t_data *data);
-char	*get_mini_env(t_data *data, char *key);
+char	*mini_getenv(t_data *data, char *key);
 void	mini_export(t_data *data, char *key, char *value);
 void	mini_unset(t_data *data, char *key);
 
@@ -103,6 +104,6 @@ void	mini_unset(t_data *data, char *key);
 //----------- directory functions ---------
 
 void	mini_pwd(void);
-void	mini_chdir(t_data *data, char *path);
+void	mini_chdir(t_data *data, t_cmd *cmd);
 
 #endif
