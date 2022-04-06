@@ -81,7 +81,28 @@ t_param		*new_param(char *param_str, param param_type, redirection redirection_t
 t_cmd		*new_cmd(void);
 t_data		*new_data(char **envp);
 void		free_data(t_data *data);
-int			minishell(t_data *data);
 void		parser(t_data *data, char *line);
+int			minishell(t_data *data);
+void		init_env(t_data *data);	
+
+// ---------- env linked list functions ---------
+
+t_envp	*env_lstnew(char *key, char *value);
+t_envp	*env_lstlast(t_envp *lst);
+void	env_lstadd_back(t_envp **lst, t_envp *new);
+void	env_lstdelnext(t_envp *head);
+
+// ---------- get env functions ------------
+
+void	mini_env(t_data *data);
+char	*get_mini_env(t_data *data, char *key);
+void	mini_export(t_data *data, char *key, char *value);
+void	mini_unset(t_data *data, char *key);
+
+
+//----------- directory functions ---------
+
+void	mini_pwd(void);
+void	mini_chdir(t_data *data, char *path);
 
 #endif

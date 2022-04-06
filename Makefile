@@ -5,28 +5,31 @@ OBJ_DIR		= obj
 LIBFT_DIR	= src/libft
 INC_DIR		= inc
 
-SRC_FILES	= main.c minishell.c parser.c param_lstfunc.c param_newfunc.c free.c
+SRC_FILES	= main.c minishell.c parser.c init_env.c env_lstfunc.c env_functions.c\
+			  directory.c param_lstfunc.c param_newfunc.c free.c
 
 OBJ_FILES	= ${addprefix ${OBJ_DIR}/, ${SRC_FILES:.c=.o}}
 
 GCC			= gcc
 CFLAGS		= -Wall -Wextra -Werror
-SANITIZE	= -g fsanitize=address
+SANITIZE	= -g -fsanitize=address
 RM			= rm -f
 
 LIBFT		= $(LIBFT_DIR)/libft.a
-LIBRARIES	= -L${LIBFT_DIR} -L/usr/local/opt/readline/lib -lft -lreadline
+LIBRARIES	= -L${LIBFT_DIR} -lft -lreadline -L/usr/local/opt/readline/lib
+
+INC_RL		= -I/usr/local/opt/readline/include
 
 all:	$(NAME)
 
 $(OBJ_DIR)/%.o:		$(SRC_DIR)/%.c
-	$(GCC) $(CFLAGS) -I $(INC_DIR) -I/usr/local/opt/readline/include -c $< -o $@
+	$(GCC) $(CFLAGS) -I $(INC_DIR) $(INC_RL) -c $< -o $@
 
 $(LIBFT):
 	make -C ${LIBFT_DIR}
 
 ${NAME}:	${LIBFT} ${OBJ_FILES}
-	${GCC} -o ${NAME} ${OBJ_FILES} $(LIBRARIES)
+	${GCC} -o ${NAME} ${OBJ_FILES} $(LIBRARIES) $(SANITIZE) $(CFLAGS)
 
 test: all
 	@./$(NAME) 

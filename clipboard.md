@@ -54,4 +54,20 @@ e test (invalid)
 
 
 ## To-do
+
+###parsing
 - return error when encounter \ or ; and unclosed quotes when parsing arguments
+
+##cd
+
+###fixed
+- cd multiple arguments has special message
+- cd with 2 arguemts 
+	- [title]https://github.com/ohmyzsh/ohmyzsh/issues/6452
+	- [title]https://www.ibm.com/docs/en/zos/2.3.0?topic=descriptions-cd-change-working-directory
+- cd with > 2 arguemts
+- cd - (goes to OLDPWD)
+
+### To-fix
+- cd no argument return to root
+
