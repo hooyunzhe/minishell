@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:22:40 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/07 11:36:58 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/04/07 11:53:09 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,6 @@ int	minishell(t_data *data)
 	{
 		parser(data, line);
 		count_args(data->cmds);
-		printf("OLD PWD = %s\n", mini_getenv(data, "OLDPWD"));
-		printf("PWD = %s\n", mini_getenv(data, "PWD"));
-		mini_chdir(data, data->cmds);
-		printf("OLD PWD = %s\n", mini_getenv(data, "OLDPWD"));
-		printf("PWD = %s\n", mini_getenv(data, "PWD"));
 		while (data->cmds)
 		{
 			//printf("params: ");
@@ -60,6 +55,11 @@ int	minishell(t_data *data)
 		}
 		free(line);
 		line = readline("minishell % ");
+	}
+	if (!line)
+	{
+		printf("exit\n");
+		exit(0); //change to our own exit function later
 	}
 	return (0);
 }
