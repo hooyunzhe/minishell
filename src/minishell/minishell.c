@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:22:40 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/07 15:03:11 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/04/07 15:48:43 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int	minishell(t_data *data)
 	{
 		parser(data, line);
 		count_args(data->cmds);
+		mini_echo(data->cmds);
 		while (data->cmds)
 		{
 			//printf("params: ");
@@ -49,9 +50,9 @@ int	minishell(t_data *data)
 				//printf("here = [%s]\n", data->cmds->params->param_str);
 				data->cmds->params = data->cmds->params->next;
 			}
-			printf("param_count: %d\n", data->cmds->param_count);
+			//printf("param_count: %d\n", data->cmds->param_count);
+			//printf("\n");
 			data->cmds = data->cmds->next;
-			printf("\n");
 		}
 		free(line);
 		line = readline("minishell % ");

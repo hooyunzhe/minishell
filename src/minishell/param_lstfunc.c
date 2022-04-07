@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 11:33:08 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/05 16:02:47 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/07 16:10:35 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,13 @@ void	param_lstadd_back(t_param **param, t_param *new_param)
 			while (current->next != NULL)
 			{
 				if (current->next->next == NULL)
+				{
 					if (current->next->param_type == REDIRECTION)
 						new_param->param_type = IO_FILE;
+					else if (current->next->param_type == ARGUMENT)
+						if (new_param->param_type == OPTION)
+							new_param->param_type = ARGUMENT;
+				}
 				current = current->next;
 			}
 			current->next = new_param;

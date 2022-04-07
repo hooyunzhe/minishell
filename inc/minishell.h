@@ -109,5 +109,6 @@ void	mini_chdir(t_data *data, t_cmd *cmd);
 //----------- signal functions -------------
 
 void	read_signals();
+void	mini_echo(t_cmd *cmd);
 
 #endif
