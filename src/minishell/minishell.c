@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:22:40 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/07 11:53:09 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/04/07 15:03:11 by nfernand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void	count_args(t_cmd *cmd)
 int	minishell(t_data *data)
 {
 	char	*line;
-	read_signals();
 
+	read_signals();
 	line = readline("minishell % ");
 	while (line != NULL)
 	{
