@@ -106,4 +106,8 @@ void	mini_unset(t_data *data, char *key);
 void	mini_pwd(void);
 void	mini_chdir(t_data *data, t_cmd *cmd);
 
+//----------- signal functions -------------
+
+void	read_signals();
+
 #endif
