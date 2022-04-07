@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/06 17:48:53 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/04/07 19:07:54 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,17 +250,32 @@ redirection	get_redirection_type(char *param_str, param param_type)
 	return (-1);
 }
 
+int	check_redirection_start(char *str)
+{
+	if (str[0] && str[1] && (str[0] == '>' || str[0] == '<'))
+	{
+		if (str[1] != '>' && str[1] != '<')
+			return (1);
+		else if (str[2])
+			return (2);
+	}
+	return (0);
+}
+
 void	get_param(t_cmd *cmd, char *param_str)
 {
 	param		param_type;
 	redirection	redirection_type;
 	char		*modified_param;
 	t_param		*current_param;
+	int			start_index;
 	
-	
-	param_type = get_param_type(param_str);
-	redirection_type = get_redirection_type(param_str, param_type);
-	modified_param = ft_strdup(param_str);
+	start_index = check_redirection_start(param_str);
+	if (start_index > 0)
+		get_param(cmd, ft_substr(param_str, 0, start_index));
+	modified_param = ft_substr(param_str, start_index, ft_strlen(param_str) - start_index);
+	param_type = get_param_type(modified_param);
+	redirection_type = get_redirection_type(modified_param, param_type);
 	if (!cmd->params || (param_lstlast(cmd->params))->redirection_type != D_IN)
 	{
 		modified_param = get_expanded_param(modified_param);

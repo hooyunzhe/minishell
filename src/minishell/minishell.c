@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:22:40 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/07 16:12:28 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/04/07 19:05:58 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,15 @@ int	minishell(t_data *data)
 		add_history(line);
 		while (data->cmds)
 		{
-			//printf("params: ");
+			printf("params: \n");
 			while (data->cmds->params != NULL)
 			{
-				//printf("[[%s], %d, %d] \n", data->cmds->params->param_str, data->cmds->params->param_type, data->cmds->params->redirection_type);
-				//printf("here = [%s]\n", data->cmds->params->param_str);
+				printf("[[%s], %d, %d] \n", data->cmds->params->param_str, data->cmds->params->param_type, data->cmds->params->redirection_type);
+				// printf("here = [%s]\n", data->cmds->params->param_str);
 				data->cmds->params = data->cmds->params->next;
 			}
 			//printf("param_count: %d\n", data->cmds->param_count);
-			//printf("\n");
+			printf("\n");
 			data->cmds = data->cmds->next;
 		}
 		free(line);
