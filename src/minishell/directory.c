@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   directory.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nfernand <nfernand@student.42kl.edu.m      +#+  +:+       +#+        */
+/*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 17:22:14 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/06 17:45:00 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/04/08 16:17:35 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ static int	handle_replaced_path(t_data *data, t_cmd *cmd, char **path)
 	pwd = mini_getenv(data, "PWD");
 	*path = replace_str(pwd, old, new);
 	if (!(*path))
-		return (printf("cd: string not in pwd: %s\n", old) * 0);
-	return (1);
+		return (handle_error(CD_STRNOTIN, old));
+	return (0);
 }	
 
 void	mini_chdir(t_data *data, t_cmd *cmd)
@@ -91,9 +91,9 @@ void	mini_chdir(t_data *data, t_cmd *cmd)
 	char	*param_path;
 
 	if (cmd->arg_count > 2)
-		return ((void)printf("cd: too many arguments\n"));
+		return ((void)handle_error(CD_TOOMANY, NULL));
 	else if (cmd->arg_count == 2)
-		if (!handle_replaced_path(data, cmd, &path))
+		if (handle_replaced_path(data, cmd, &path) == 1)
 			return ;
 	if (cmd->arg_count == 1)
 	{
@@ -106,12 +106,11 @@ void	mini_chdir(t_data *data, t_cmd *cmd)
 			path = param_path;
 	}
 	else if (cmd->arg_count == 0 && cmd->param_count > 1)
-		return ((void)printf("cd: no such file or directory: %s\n",
-				cmd->params->next->param_str));
+		return ((void)handle_error(CD_NODIR, cmd->params->next->param_str));
 	else if (cmd->arg_count == 0)
 		path = mini_getenv(data, "HOME");
 	if (chdir(path) == -1)
-		return ((void)printf("cd: no such file or directory: %s\n", path));
+		return ((void)handle_error(CD_NODIR, path));
 	update_env_pwd(data);
 }
 

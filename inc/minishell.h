@@ -16,6 +16,16 @@
 # include <curses.h> // tgetent tgetflag tgetnumt getstr tgoto tputs
 # include <term.h>
 
+# define RESET		"\033[0m"
+# define BLACK		"\033[30m"
+# define RED		"\033[31m"
+# define GREEN		"\033[32m"
+# define YELLOW		"\033[33m"
+# define BLUE		"\033[34m"
+# define MAGENTA	"\033[35m"
+# define CYAN		"\033[36m"
+# define WHITE		"\033[37m"
+
 typedef enum param
 {
 	COMMAND,
@@ -33,11 +43,23 @@ typedef enum redirection
 	D_OUT
 }	redirection;
 
+typedef enum enclose
+{
+	CLOSED,
+	SINGLE,
+	DOUBLE,
+	NORMAL
+}	enclose;
 
-# define CLOSED 0
-# define SINGLE 1
-# define DOUBLE 2
-# define NORMAL 3
+typedef enum error_id
+{
+	CD_NODIR,
+	CD_TOOMANY,
+	CD_STRNOTIN,
+	EXP_NOTVALID,
+	EXIT_NONUM,
+	EXIT_TOOMANY
+}	error_id;
 
 typedef struct s_param t_param;
 typedef struct s_infile t_infile;
@@ -75,6 +97,7 @@ typedef struct s_data
 	t_envp	*mini_envp;
 }			t_data;
 
+int			handle_error(error_id id, char *param);
 t_param		*param_lstlast(t_param *param);
 void		param_lstadd_back(t_param **param, t_param *new_param);
 void		cmd_lstadd_back(t_cmd **cmd, t_cmd *new_cmd);
@@ -84,7 +107,7 @@ t_data		*new_data(char **envp);
 void		free_data(t_data *data);
 void		parser(t_data *data, char *line);
 int			minishell(t_data *data);
-void		init_env(t_data *data);	
+void		init_env(t_data *data);
 
 // ---------- env linked list functions ---------
 

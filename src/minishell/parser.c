@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/08 10:36:51 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/08 16:10:30 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	print_args(t_data *data)
 	printf("\n");
 }
 
-int	is_closed(int enclose_type, char current_char)
+enclose	is_closed(enclose enclose_type, char current_char)
 {
 	return ((enclose_type == 1 && current_char == '\'')
 		|| (enclose_type == 2 && current_char == '\"')
@@ -34,7 +34,7 @@ int	is_closed(int enclose_type, char current_char)
 		// || current_char == '\'' || current_char == '\"')));
 }
 
-int	get_enclose_type(int enclose_type, char current_char)
+int	get_enclose_type(enclose enclose_type, char current_char)
 {
 	if (enclose_type == CLOSED || enclose_type == NORMAL)
 	{
@@ -84,8 +84,8 @@ int	check_input(char *str)
 
 int	get_envlen(char *line, int *index)
 {
-	int	i;
-	int len;
+	int		i;
+	int 	len;
 	char	*temp;
 
 	(*index)++;
@@ -133,7 +133,7 @@ char	*get_expanded_param(char *line)
 	int		j;
 	char	*expanded_line;
 	char	*env_var;
-	int		enclose_type;
+	enclose	enclose_type;
 
 	expanded_line = malloc(get_expanded_len(line) * sizeof(char));
 	i = 0;
@@ -178,7 +178,7 @@ int	get_unquoted_len(char *line)
 {
 	int		i;
 	int		count;
-	int		enclose_type;
+	enclose	enclose_type;
 
 	i = 0;
 	count = 0;
@@ -201,7 +201,7 @@ char	*get_unquoted_param(char *line)
 {
 	int		i;
 	int		j;
-	int		enclose_type;
+	enclose	enclose_type;
 	char	*unquoted_line;
 
 	i = 0;
@@ -320,7 +320,7 @@ t_cmd	*get_cmd(t_data *data, char *line)
 {
 	int		i;
 	int		len;
-	int		enclose_type;
+	enclose	enclose_type;
 	t_cmd	*cmd;
 
 	i = 0;
@@ -350,7 +350,7 @@ int		get_cmd_count(char *line)
 {
 	int	i;
 	int	len;
-	int	enclose_type;
+	enclose	enclose_type;
 
 	i = 0;
 	len = 0;
@@ -371,7 +371,7 @@ char	**get_cmd_strs(char *line)
 	int		i;
 	int		j;
 	int		len;
-	int		enclose_type;
+	enclose	enclose_type;
 	char	**cmd_strs;
 
 	i = 0;
