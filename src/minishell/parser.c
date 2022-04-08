@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/07 19:07:54 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/08 10:36:51 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,6 +234,34 @@ param	get_param_type(char *param_str)
 	return (ARGUMENT);
 }
 
+void	update_param_type(t_param *params)
+{
+	int	has_command;
+
+	has_command = 0;
+	if (params->param_type == ARGUMENT)
+	{
+		params->param_type = COMMAND;
+		has_command = 1;
+	}
+	while (params->next != NULL)
+	{
+		if (params->param_type == COMMAND)
+			has_command = 1;
+		if (params->param_type == REDIRECTION)
+			params->next->param_type = IO_FILE;
+		else if (params->param_type == ARGUMENT)
+			if (params->param_type == OPTION)
+				params->next->param_type = ARGUMENT;
+		if (!has_command && params->next->param_type == ARGUMENT)
+		{
+			params->next->param_type = COMMAND;
+			has_command = 1;
+		}
+		params = params->next;
+	}
+}
+
 redirection	get_redirection_type(char *param_str, param param_type)
 {
 	if (param_type == REDIRECTION)
@@ -285,7 +313,7 @@ void	get_param(t_cmd *cmd, char *param_str)
 	modified_param = get_unquoted_param(modified_param);
 	//printf("unquoted param: %s\n", modified_param);
 	current_param = new_param(modified_param, param_type, redirection_type);
-	param_lstadd_back(&cmd->params, current_param); 
+	param_lstadd_back(&cmd->params, current_param);
 }
 
 t_cmd	*get_cmd(t_data *data, char *line)
@@ -304,7 +332,8 @@ t_cmd	*get_cmd(t_data *data, char *line)
 	{
 		// printf("i: %d, len: %d, line[i]: %c, enclose_type: %d\n", i, len, line[i], enclose_type);
 		len += (line[i] != ' ' || (enclose_type && enclose_type != NORMAL));
-		if ((is_closed(enclose_type, line[i]) || enclose_type == NORMAL)
+		if ((is_closed(enclose_type, line[i])
+			|| get_enclose_type(enclose_type, line[i]) == NORMAL)
 			&& (line[i + 1] == ' ' || !line[i + 1]) && len > 0)
 		{
 			get_param(cmd, ft_substr(line, i - len + 1, len));
@@ -313,6 +342,7 @@ t_cmd	*get_cmd(t_data *data, char *line)
 		enclose_type = get_enclose_type(enclose_type, line[i]);
 		i++;
 	}
+	update_param_type(cmd->params);
 	return (cmd);
 }
 
