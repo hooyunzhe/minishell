@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:22:40 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/08 16:32:14 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/11 13:59:14 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	minishell(t_data *data)
 		parser(data, line);
 		count_args(data->cmds);
 		add_history(line);
+		executor(data);
 		while (data->cmds)
 		{
 			printf("params: \n");

@@ -61,6 +61,17 @@ typedef enum error_id
 	EXIT_TOOMANY
 }	error_id;
 
+typedef enum builtin_cmd
+{
+	MINI_ECHO,
+	MINI_CD,
+	MINI_PWD,
+	MINI_EXPORT,
+	MINI_UNSET,
+	MINI_ENV,
+	MINI_EXIT
+}	builtin_cmd;
+
 typedef struct s_param t_param;
 typedef struct s_infile t_infile;
 typedef struct s_outfile t_outfile;
@@ -94,20 +105,25 @@ typedef struct s_data
 {
 	char	**envp;
 	t_cmd	*cmds;
+	int		cmd_count;
 	t_envp	*mini_envp;
 }			t_data;
 
 int			handle_error(error_id id, char *param);
-t_param		*param_lstlast(t_param *param);
-void		param_lstadd_back(t_param **param, t_param *new_param);
 void		cmd_lstadd_back(t_cmd **cmd, t_cmd *new_cmd);
-t_param		*new_param(char *param_str, param param_type, redirection redirection_type);
 t_cmd		*new_cmd(void);
 t_data		*new_data(char **envp);
 void		free_data(t_data *data);
 void		parser(t_data *data, char *line);
 int			minishell(t_data *data);
 void		init_env(t_data *data);
+
+// ---------- param linked list functions ---------
+
+t_param	*new_param(char *param_str, param param_type, redirection redirection_type);
+t_param	*param_lstfind(t_param *node, param type, int index);
+t_param	*param_lstlast(t_param *param);
+void	param_lstadd_back(t_param **param, t_param *new_param);
 
 // ---------- env linked list functions ---------
 
@@ -120,8 +136,8 @@ void	env_lstdelnext(t_envp *head);
 
 void	mini_env(t_data *data);
 char	*mini_getenv(t_data *data, char *key);
-void	mini_export(t_data *data, char *key, char *value);
-void	mini_unset(t_data *data, char *key);
+void	mini_export(t_data *data, t_cmd *cmd);
+void	mini_unset(t_data *data, t_cmd *cmd);
 
 
 //----------- directory functions ---------
@@ -132,6 +148,10 @@ void	mini_chdir(t_data *data, t_cmd *cmd);
 //----------- signal functions -------------
 
 void	read_signals();
-void	mini_echo(t_cmd *cmd);
+void	mini_echo(t_param *param);
+
+//----------- execute functions -------------
+
+void	executor(t_data *data);
 
 #endif

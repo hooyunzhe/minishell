@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_echo.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nfernand <nfernand@student.42kl.edu.m      +#+  +:+       +#+        */
+/*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 15:36:26 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/07 16:07:19 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/04/11 15:49:26 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ void	print_echo(char *str, int type)
 		printf("%s ", str);
 }
 
-void	mini_echo(t_cmd *cmd)
+void	mini_echo(t_param *param)
 {
 	t_param	*node;
 	int		has_option;
 	int		chain_n;
 
-	node = cmd->params->next;
+	node = param->next;
 	has_option = 0;
 	chain_n = 0;
 	while (node)

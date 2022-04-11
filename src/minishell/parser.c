@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/08 16:10:30 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/11 16:20:01 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	check_input(char *str)
 	return (opened == 1 || opened == 2);
 }
 
-int	get_envlen(char *line, int *index)
+int	get_envlen(t_data *data, char *line, int *index)
 {
 	int		i;
 	int 	len;
@@ -93,7 +93,7 @@ int	get_envlen(char *line, int *index)
 	while (line[i] && is_valid_var(line[i]))
 		i++;
 	temp = ft_substr(line, *index, i - *index);
-	len = ft_strlen(getenv(temp));
+	len = ft_strlen(mini_getenv(data, temp));
 	(*index) = i - 1;
 	free(temp);
 	return (len);
@@ -109,7 +109,7 @@ char	*get_envvar(char *line, int index)
 	return (ft_substr(line, index, i - index));
 }
 
-int	get_expanded_len(char *line)
+int	get_expanded_len(t_data *data, char *line)
 {
 	int		i;
 	int		len;
@@ -119,7 +119,7 @@ int	get_expanded_len(char *line)
 	while (line[i])
 	{
 		if (line[i] == '$')
-			len += get_envlen(line, &i) + 2;
+			len += get_envlen(data, line, &i) + 2;
 		else
 			len++;
 		i++;
@@ -127,7 +127,7 @@ int	get_expanded_len(char *line)
 	return (len + 1);
 }
 
-char	*get_expanded_param(char *line)
+char	*get_expanded_param(t_data *data, char *line)
 {
 	int		i;
 	int		j;
@@ -135,7 +135,7 @@ char	*get_expanded_param(char *line)
 	char	*env_var;
 	enclose	enclose_type;
 
-	expanded_line = malloc(get_expanded_len(line) * sizeof(char));
+	expanded_line = malloc(get_expanded_len(data, line) * sizeof(char));
 	i = 0;
 	j = 0;
 	enclose_type = CLOSED;
@@ -152,15 +152,15 @@ char	*get_expanded_param(char *line)
 			else
 			{	
 				env_var = get_envvar(line, i + 1);
-				if (ft_strchr(getenv(env_var), '\"') == NULL)
+				if (ft_strchr(mini_getenv(data, env_var), '\"') == NULL)
 					expanded_line[j++] = '\"';
-				else if (ft_strchr(getenv(env_var), '\'') == NULL)
+				else if (ft_strchr(mini_getenv(data, env_var), '\'') == NULL)
 					expanded_line[j++] = '\'';
-				ft_memmove(&(expanded_line[j]), getenv(env_var), get_envlen(line, &i));
-				j += ft_strlen(getenv(env_var));
-				if (ft_strchr(getenv(env_var), '\"') == NULL)
+				ft_memmove(&(expanded_line[j]), mini_getenv(data, env_var), get_envlen(data, line, &i));
+				j += ft_strlen(mini_getenv(data, env_var));
+				if (ft_strchr(mini_getenv(data, env_var), '\"') == NULL)
 					expanded_line[j++] = '\"';
-				else if (ft_strchr(getenv(env_var), '\'') == NULL)
+				else if (ft_strchr(mini_getenv(data, env_var), '\'') == NULL)
 					expanded_line[j++] = '\'';
 				free(env_var);
 			}
@@ -290,7 +290,7 @@ int	check_redirection_start(char *str)
 	return (0);
 }
 
-void	get_param(t_cmd *cmd, char *param_str)
+void	get_param(t_data *data, t_cmd *cmd, char *param_str)
 {
 	param		param_type;
 	redirection	redirection_type;
@@ -300,13 +300,13 @@ void	get_param(t_cmd *cmd, char *param_str)
 	
 	start_index = check_redirection_start(param_str);
 	if (start_index > 0)
-		get_param(cmd, ft_substr(param_str, 0, start_index));
+		get_param(data, cmd, ft_substr(param_str, 0, start_index));
 	modified_param = ft_substr(param_str, start_index, ft_strlen(param_str) - start_index);
 	param_type = get_param_type(modified_param);
 	redirection_type = get_redirection_type(modified_param, param_type);
 	if (!cmd->params || (param_lstlast(cmd->params))->redirection_type != D_IN)
 	{
-		modified_param = get_expanded_param(modified_param);
+		modified_param = get_expanded_param(data, modified_param);
 		//printf("expanded param: %s\n", modified_param);
 	}
 	//printf("END\n");
@@ -336,7 +336,7 @@ t_cmd	*get_cmd(t_data *data, char *line)
 			|| get_enclose_type(enclose_type, line[i]) == NORMAL)
 			&& (line[i + 1] == ' ' || !line[i + 1]) && len > 0)
 		{
-			get_param(cmd, ft_substr(line, i - len + 1, len));
+			get_param(data, cmd, ft_substr(line, i - len + 1, len));
 			len = 0;
 		}
 		enclose_type = get_enclose_type(enclose_type, line[i]);
@@ -410,6 +410,7 @@ void	parser(t_data *data, char *line)
 		if (check_input(line))
 			break ;
 		cmd_lstadd_back(&data->cmds, get_cmd(data, cmd_strs[i]));
+		data->cmd_count++;
 		i++;
 	}
 	i = 0;

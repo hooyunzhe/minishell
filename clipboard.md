@@ -47,6 +47,8 @@ echo ">>t"test
 ### parsing
 
 - return error when encounter \ or ; and unclosed quotes when parsing arguments
+- fix if there is nothing at all
+- fix if theres nothing between pipes
 
 ### cd
 - cd multiple arguments has special message

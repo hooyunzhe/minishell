@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 10:52:26 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/06 14:06:06 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/04/11 13:56:26 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,6 @@ t_data	*new_data(char **envp)
 	data = malloc(sizeof(t_data));
 	data->cmds = NULL;
 	data->envp = envp;
+	data->cmd_count = 0;
 	return (data);
 }
