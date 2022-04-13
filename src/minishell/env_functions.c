@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 11:53:32 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/11 16:15:31 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/12 12:05:53 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ void	mini_export(t_data *data, t_cmd *cmd)
 			{
 				key = get_key(node->param_str);
 				if (!key)
-					return (handle_error(EXP_NOTVALID, node->param_str));
+					//return (handle_error(EXP_NOTVALID, node->param_str));
+					handle_error(EXP_NOTVALID, node->param_str);
 				value = ft_substr(node->param_str, ft_strlen(key),
 					ft_strlen(node->param_str) - ft_strlen(key));
 				env_lstadd_back(&head, env_lstnew(key, value));

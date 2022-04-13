@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 10:52:26 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/11 13:56:26 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/13 15:49:21 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,22 @@ t_cmd	*new_cmd(void)
 	cmds->next = NULL;
 	cmds->param_count = 0;
 	cmds->arg_count = 0;
+	cmds->option_count = 0;
+	cmds->input_fd = 0;
+	cmds->output_fd = 1;
 	return (cmds);
 }
 
 t_data	*new_data(char **envp)
 {
 	t_data	*data;
+	t_term	original_term;
 
 	data = malloc(sizeof(t_data));
 	data->cmds = NULL;
 	data->envp = envp;
 	data->cmd_count = 0;
+	tcgetattr(0, &original_term);
+	data->original_term = original_term;
 	return (data);
 }

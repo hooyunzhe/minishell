@@ -3,21 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nfernand <nfernand@student.42kl.edu.m      +#+  +:+       +#+        */
+/*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 11:34:52 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/07 11:39:53 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/04/12 11:43:36 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-struct termios	saved;
-
-static void	reset_the_terminal()
-{
-	tcsetattr(0, 0,  &saved);
-}
 
 static void	handle_signal(int num)
 {
@@ -35,15 +28,14 @@ static void	handle_signal(int num)
 	}
 }
 
-void	read_signals()
+void	read_signals(t_data *data)
 {
-	struct	termios	new;
+	t_term	new_term;
 
-	tcgetattr(0 , &saved);
-	atexit(reset_the_terminal); //change this later illegal funcitno ujst reset the terminal normall on exit
-	new = saved;
-	new.c_lflag &= ~ECHOCTL;
-	tcsetattr(0, 0, &new);
+	//atexit(reset_the_terminal); //change this later illegal funcitno ujst reset the terminal normall on exit
+	new_term = data->original_term;
+	new_term.c_lflag &= ~ECHOCTL;
+	tcsetattr(0, 0, &new_term);
 	signal(SIGINT, handle_signal);
 	signal(SIGQUIT, handle_signal);
 }

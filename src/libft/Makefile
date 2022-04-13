@@ -28,10 +28,10 @@ MAKELIB	= ar rc
 CFLAGS	= -Wall -Wextra -Werror
 
 .c.o:
-	${GCC} ${CFLAGS} -I ${INC_DIR} -c $< -o ${<:.c=.o}
+	@${GCC} ${CFLAGS} -I ${INC_DIR} -c $< -o ${<:.c=.o}
 
 ${NAME}:	${OBJS}
-	${MAKELIB} ${NAME} ${OBJS}
+	@${MAKELIB} ${NAME} ${OBJS}
 
 bonus:	${OBJS} ${OBJS_B} ${OBJS_BB}
 	${MAKELIB} ${NAME} ${OBJS} ${OBJS_B} ${OBJS_BB}
@@ -39,10 +39,10 @@ bonus:	${OBJS} ${OBJS_B} ${OBJS_BB}
 all:	${NAME}
 
 clean:
-	${RM} ${OBJS} ${OBJS_B} ${OBJS_BB}
+	@${RM} ${OBJS} ${OBJS_B} ${OBJS_BB}
 
 fclean:	clean
-	${RM} ${NAME}
+	@${RM} ${NAME}
 
 re:	fclean all
 

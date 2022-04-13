@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 11:33:08 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/11 15:21:44 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/12 13:58:56 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,10 @@
 
 t_param	*param_lstfind(t_param *node, param type, int index)
 {
-	while (node && node->next != NULL)
+	while (node)
 	{
-		if (node->param_type == type && index == 0)
+		if (node->param_type == type && index-- == 0)
 			return (node);
-		index--;
 		node = node->next;
 	}
 	return (NULL);

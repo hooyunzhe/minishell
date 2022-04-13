@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/11 16:20:01 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/12 17:43:44 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -327,7 +327,6 @@ t_cmd	*get_cmd(t_data *data, char *line)
 	len = 0;
 	enclose_type = CLOSED;
 	cmd = new_cmd();
-	(void)data;
 	while (line[i])
 	{
 		// printf("i: %d, len: %d, line[i]: %c, enclose_type: %d\n", i, len, line[i], enclose_type);
@@ -335,14 +334,15 @@ t_cmd	*get_cmd(t_data *data, char *line)
 		if ((is_closed(enclose_type, line[i])
 			|| get_enclose_type(enclose_type, line[i]) == NORMAL)
 			&& (line[i + 1] == ' ' || !line[i + 1]) && len > 0)
-		{
+		{		
 			get_param(data, cmd, ft_substr(line, i - len + 1, len));
 			len = 0;
 		}
 		enclose_type = get_enclose_type(enclose_type, line[i]);
 		i++;
 	}
-	update_param_type(cmd->params);
+	if (cmd->params)
+		update_param_type(cmd->params);
 	return (cmd);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_lstfunc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nfernand <nfernand@student.42kl.edu.m      +#+  +:+       +#+        */
+/*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 11:50:54 by nfernand          #+#    #+#             */
-/*   Updated: 2022/03/29 12:44:34 by nfernand         ###   ########.fr       */
+/*   Updated: 2022/04/12 17:33:55 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ t_envp	*env_lstnew(char *key, char *value)
 	t_envp	*node;
 
 	node = malloc(sizeof(t_envp));
-	node->key = ft_strdup(key);
-	node->value = ft_substr(value, 0, ft_strlen(value));
+	node->key = key;
+	node->value = ft_strdup(value);
 	node->next = NULL;
 
 	return (node);
@@ -34,6 +34,19 @@ t_envp	*env_lstlast(t_envp *lst)
 			lst = lst->next;
 	}
 	return (lst);
+}
+
+int		env_lst_getlen(t_envp *envp)
+{
+	int	count;
+
+	count = 0;
+	while (envp)
+	{
+		count++;
+		envp = envp->next;
+	}
+	return (count);
 }
 
 void	env_lstadd_back(t_envp **lst, t_envp *new)

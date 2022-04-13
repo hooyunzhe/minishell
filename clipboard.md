@@ -58,7 +58,14 @@ echo ">>t"test
 - cd with > 2 arguemts
 - cd - (goes to OLDPWD)
 - cd no argument return to root
-- cd -n no option
+- cd [check if file is file or directory](https://stackoverflow.com/questions/4553012/checking-if-a-file-is-a-directory-or-just-a-file)
+
+## To fix
+- cd test test2
+- cd -n test
+- cd -n -n
+- cd < test -n abc
+- cd < test ~
 
 ## To not fix
 

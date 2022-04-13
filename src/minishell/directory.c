@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 17:22:14 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/08 16:17:35 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/13 16:17:28 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,16 +66,34 @@ static void	update_env_pwd(t_data *data)
 	}
 }
 
+static char	*find_string(t_param *param, int count)
+{
+	int	i;
+
+	i = 0;
+	while (param)
+	{
+		if (param->param_type == OPTION || param->param_type == ARGUMENT)
+		{
+			if (i == count)
+				return (param->param_str);
+			i++;
+		}
+		param = param->next;
+	}
+	return (NULL);
+}
+
 static int	handle_replaced_path(t_data *data, t_cmd *cmd, char **path)
 {
 	char	*old;
 	char	*new;
 	char	*pwd;
 
-	old = cmd->params->next->param_str;
+	old = find_string(cmd->params, 0);
+	new = find_string(cmd->params, 1);
 	if (!ft_strncmp(old, "~", 1))
 		old = ft_strjoin(mini_getenv(data, "HOME"), old + 1);
-	new = cmd->params->next->next->param_str;
 	if (!ft_strncmp(new, "~", 1))
 		new = ft_strjoin(mini_getenv(data, "HOME"), new + 1);
 	pwd = mini_getenv(data, "PWD");
@@ -90,14 +108,16 @@ void	mini_chdir(t_data *data, t_cmd *cmd)
 	char	*path;
 	char	*param_path;
 
-	if (cmd->arg_count > 2)
+	if ((cmd->option_count + cmd->arg_count) > 2)
 		return ((void)handle_error(CD_TOOMANY, NULL));
-	else if (cmd->arg_count == 2)
+	else if ((cmd->option_count + cmd->arg_count) == 2)
+	{
 		if (handle_replaced_path(data, cmd, &path) == 1)
 			return ;
-	if (cmd->arg_count == 1)
+	}
+	else if ((cmd->option_count + cmd->arg_count) == 1)
 	{
-		param_path = cmd->params->next->param_str;
+		param_path = find_string(cmd->params, 0);
 		if (!ft_strncmp(param_path, "-", 2))
 			path = mini_getenv(data, "OLDPWD");
 		else if (!ft_strncmp(param_path, "~", 1))
@@ -105,12 +125,16 @@ void	mini_chdir(t_data *data, t_cmd *cmd)
 		else
 			path = param_path;
 	}
-	else if (cmd->arg_count == 0 && cmd->param_count > 1)
-		return ((void)handle_error(CD_NODIR, cmd->params->next->param_str));
-	else if (cmd->arg_count == 0)
+	else
 		path = mini_getenv(data, "HOME");
 	if (chdir(path) == -1)
+	{
+		if (errno == ENOTDIR)
+			return ((void)handle_error(CD_NOTADIR, path));
+		else if (errno == EACCES)
+			return ((void)handle_error(CD_NOACCESS, path));
 		return ((void)handle_error(CD_NODIR, path));
+	}
 	update_env_pwd(data);
 }
 
