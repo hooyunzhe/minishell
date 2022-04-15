@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/13 14:56:43 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/14 11:36:05 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,7 @@ void	execute_command(t_data *data, t_cmd *cmd, t_param *command_str)
 	int	status;
 	waitpid(pid, &status, 0);
 	printf("Exited with code %d\n", WEXITSTATUS(status));
+	data->exit_status = WEXITSTATUS(status);
 }
 
 void	single_executor(t_data *data, t_cmd *cmd)
@@ -188,6 +189,7 @@ void	single_executor(t_data *data, t_cmd *cmd)
 	handle_redirections(cmd, cmd->params);
 	dup2(cmd->input_fd, 0);
 	dup2(cmd->output_fd, 1);
+	printf("TYPE = %d\n", type);
 	if (type != FAKE)
 		execute_builtin(data, cmd, type);
 	else

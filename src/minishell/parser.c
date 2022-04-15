@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/12 17:43:44 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/14 18:54:52 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,19 +82,19 @@ int	check_input(char *str)
 	return (opened == 1 || opened == 2);
 }
 
-int	get_envlen(t_data *data, char *line, int *index)
+int	get_envlen(t_data *data, char *line, int index)
 {
 	int		i;
 	int 	len;
 	char	*temp;
 
-	(*index)++;
-	i = *index;
+	//(*index)++;
+	i = index + 1;
 	while (line[i] && is_valid_var(line[i]))
 		i++;
-	temp = ft_substr(line, *index, i - *index);
+	temp = ft_substr(line, index + 1, i - index);
 	len = ft_strlen(mini_getenv(data, temp));
-	(*index) = i - 1;
+	//(*index) = i - 1;
 	free(temp);
 	return (len);
 }
@@ -103,23 +103,31 @@ char	*get_envvar(char *line, int index)
 {
 	int		i;
 
-	i = index;
+	i = index + 1;
 	while (line[i] && is_valid_var(line[i]))
 		i++;
-	return (ft_substr(line, index, i - index));
+	//if (i == index && ft_strlen(line) == 1)
+		//return (line + 1);
+	return (ft_substr(line, index + 1, i - index));
 }
 
 int	get_expanded_len(t_data *data, char *line)
 {
 	int		i;
 	int		len;
+	char	*temp;
 
 	i = 0;
 	len = 0;
 	while (line[i])
 	{
 		if (line[i] == '$')
-			len += get_envlen(data, line, &i) + 2;
+		{
+			temp = get_envvar(line, i);
+			len += ft_strlen(mini_getenv(data, temp));
+			i += ft_strlen(temp);
+			free(temp);
+		}
 		else
 			len++;
 		i++;
@@ -133,6 +141,7 @@ char	*get_expanded_param(t_data *data, char *line)
 	int		j;
 	char	*expanded_line;
 	char	*env_var;
+	char	*temp;
 	enclose	enclose_type;
 
 	expanded_line = malloc(get_expanded_len(data, line) * sizeof(char));
@@ -144,26 +153,33 @@ char	*get_expanded_param(t_data *data, char *line)
 		enclose_type = get_enclose_type(enclose_type, line[i]);
 		if (line[i] == '$' && enclose_type != SINGLE)
 		{
+			env_var = get_envvar(line, i);
+			printf("env_var = [%s]\n", env_var);
 			if (line[i + 1] && ft_isdigit(line[i + 1]))
+				i++;
+			else if (!ft_strncmp(env_var, "?", 1))
 			{
-				while(line[i + 1] && ft_isdigit(line[i + 1]))
-					i++;
+				temp = ft_itoa(data->exit_status);
+				ft_memmove(&(expanded_line[j]), temp, ft_strlen(temp));
+				j += ft_strlen(temp);
+				free(temp);
+				i += ft_strlen(env_var);
 			}
 			else
 			{	
-				env_var = get_envvar(line, i + 1);
 				if (ft_strchr(mini_getenv(data, env_var), '\"') == NULL)
 					expanded_line[j++] = '\"';
 				else if (ft_strchr(mini_getenv(data, env_var), '\'') == NULL)
 					expanded_line[j++] = '\'';
-				ft_memmove(&(expanded_line[j]), mini_getenv(data, env_var), get_envlen(data, line, &i));
+				ft_memmove(&(expanded_line[j]), mini_getenv(data, env_var), ft_strlen(mini_getenv(data, env_var)));
 				j += ft_strlen(mini_getenv(data, env_var));
 				if (ft_strchr(mini_getenv(data, env_var), '\"') == NULL)
 					expanded_line[j++] = '\"';
 				else if (ft_strchr(mini_getenv(data, env_var), '\'') == NULL)
 					expanded_line[j++] = '\'';
-				free(env_var);
+				i += ft_strlen(env_var);
 			}
+			free(env_var);
 		}
 		else
 			expanded_line[j++] = line[i];
@@ -311,9 +327,12 @@ void	get_param(t_data *data, t_cmd *cmd, char *param_str)
 	}
 	//printf("END\n");
 	modified_param = get_unquoted_param(modified_param);
-	//printf("unquoted param: %s\n", modified_param);
-	current_param = new_param(modified_param, param_type, redirection_type);
-	param_lstadd_back(&cmd->params, current_param);
+	printf("unquoted param: [%d]\n", modified_param[0]);
+	if (modified_param[0])
+	{
+		current_param = new_param(modified_param, param_type, redirection_type);
+		param_lstadd_back(&cmd->params, current_param);
+	}
 }
 
 t_cmd	*get_cmd(t_data *data, char *line)

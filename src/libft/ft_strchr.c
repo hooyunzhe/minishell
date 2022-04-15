@@ -6,14 +6,17 @@
 /*   By: hyun-zhe <hyun-zhe@student.42kl.edu.m      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 18:13:28 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2021/06/10 00:25:09 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/14 11:59:31 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+#include <stdio.h>
 char	*ft_strchr(const char *s, int c)
 {
+	if (!s)
+		return (NULL);
 	while (*s)
 	{
 		if ((unsigned char)*s == (unsigned char)c)

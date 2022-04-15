@@ -118,6 +118,7 @@ typedef struct s_data
 	t_envp	*mini_envp;
 	t_cmd	*cmds;
 	int		cmd_count;
+	int		exit_status;
 	t_term	original_term;
 }			t_data;
 

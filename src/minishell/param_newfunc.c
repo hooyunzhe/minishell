@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 10:52:26 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/13 15:49:21 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/14 11:35:18 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,6 @@ t_data	*new_data(char **envp)
 	data->cmd_count = 0;
 	tcgetattr(0, &original_term);
 	data->original_term = original_term;
+	data->exit_status = 0;
 	return (data);
 }
