@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 17:22:14 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/13 16:17:28 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/18 13:16:36 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,6 @@ static int	handle_replaced_path(t_data *data, t_cmd *cmd, char **path)
 
 	old = find_string(cmd->params, 0);
 	new = find_string(cmd->params, 1);
-	if (!ft_strncmp(old, "~", 1))
-		old = ft_strjoin(mini_getenv(data, "HOME"), old + 1);
-	if (!ft_strncmp(new, "~", 1))
-		new = ft_strjoin(mini_getenv(data, "HOME"), new + 1);
 	pwd = mini_getenv(data, "PWD");
 	*path = replace_str(pwd, old, new);
 	if (!(*path))
@@ -120,8 +116,6 @@ void	mini_chdir(t_data *data, t_cmd *cmd)
 		param_path = find_string(cmd->params, 0);
 		if (!ft_strncmp(param_path, "-", 2))
 			path = mini_getenv(data, "OLDPWD");
-		else if (!ft_strncmp(param_path, "~", 1))
-			path = ft_strjoin(mini_getenv(data, "HOME"), param_path + 1);
 		else
 			path = param_path;
 	}

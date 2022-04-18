@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/14 18:54:52 by nazrinsha        ###   ########.fr       */
+/*   Updated: 2022/04/18 13:08:25 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,8 @@ int	get_expanded_len(t_data *data, char *line)
 			i += ft_strlen(temp);
 			free(temp);
 		}
+		if (line[i] == '~')
+			len += ft_strlen(mini_getenv(data, "HOME"));
 		else
 			len++;
 		i++;
@@ -180,6 +182,11 @@ char	*get_expanded_param(t_data *data, char *line)
 				i += ft_strlen(env_var);
 			}
 			free(env_var);
+		}
+		else if (line[i] == '~')
+		{
+			ft_memmove(&(expanded_line[j]), mini_getenv(data, "HOME"), ft_strlen(mini_getenv(data, "HOME")));
+			j += ft_strlen(mini_getenv(data, "HOME"));
 		}
 		else
 			expanded_line[j++] = line[i];

@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 11:50:54 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/12 17:33:55 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/18 13:10:52 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,8 @@ t_envp	*env_lstnew(char *key, char *value)
 
 	node = malloc(sizeof(t_envp));
 	node->key = key;
-	node->value = ft_strdup(value);
+	node->value = value;
 	node->next = NULL;
-
 	return (node);
 }
 

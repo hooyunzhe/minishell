@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/14 11:36:05 by nazrinsha        ###   ########.fr       */
+/*   Updated: 2022/04/18 11:34:36 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,19 @@ builtin_cmd		check_builtin(t_param *param)
 
 	command = param_lstfind(param, COMMAND, 0);
 	lower_str = ft_strtolower(command->param_str);
-	if (!ft_strncmp(lower_str, "echo", 4))
+	if (!ft_strncmp(lower_str, "echo", 5))
 		return (MINI_ECHO);
-	if (!ft_strncmp(lower_str, "cd", 2))
+	if (!ft_strncmp(lower_str, "cd", 3))
 		return (MINI_CD);
-	if (!ft_strncmp(lower_str, "pwd", 3))
+	if (!ft_strncmp(lower_str, "pwd", 4))
 		return (MINI_PWD);
-	if (!ft_strncmp(lower_str, "export", 6))
+	if (!ft_strncmp(lower_str, "export", 7))
 		return (MINI_EXPORT);
-	if (!ft_strncmp(lower_str, "unset", 5))
+	if (!ft_strncmp(lower_str, "unset", 6))
 		return (MINI_UNSET);
-	if (!ft_strncmp(lower_str, "env", 3))
+	if (!ft_strncmp(lower_str, "env", 4))
 		return (MINI_ENV);
-	if (!ft_strncmp(lower_str, "exit", 4))
+	if (!ft_strncmp(lower_str, "exit", 5))
 		return (MINI_EXIT);
 	free(lower_str);
 	return (FAKE);
