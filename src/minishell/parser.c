@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/18 13:08:25 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/19 16:05:07 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,7 +334,7 @@ void	get_param(t_data *data, t_cmd *cmd, char *param_str)
 	}
 	//printf("END\n");
 	modified_param = get_unquoted_param(modified_param);
-	printf("unquoted param: [%d]\n", modified_param[0]);
+	// printf("unquoted param: [%d]\n", modified_param[0]);
 	if (modified_param[0])
 	{
 		current_param = new_param(modified_param, param_type, redirection_type);
@@ -389,7 +389,7 @@ int		get_cmd_count(char *line)
 			len++;
 		i++;
 	}
-	return (len + (line[i - 1] != '|'));
+	return (len);
 }
 
 char	**get_cmd_strs(char *line)
@@ -427,8 +427,8 @@ void	parser(t_data *data, char *line)
 	int		i;
 	char	**cmd_strs;
 
-	(void)data;
 	i = 0;
+	data->cmd_count = get_cmd_count(line);
 	cmd_strs = get_cmd_strs(line);
 	while (cmd_strs[i])
 	{
@@ -436,7 +436,6 @@ void	parser(t_data *data, char *line)
 		if (check_input(line))
 			break ;
 		cmd_lstadd_back(&data->cmds, get_cmd(data, cmd_strs[i]));
-		data->cmd_count++;
 		i++;
 	}
 	i = 0;

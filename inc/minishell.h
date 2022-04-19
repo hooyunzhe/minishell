@@ -56,6 +56,8 @@ typedef enum enclose
 typedef enum error_id
 {
 	EXE_NOCMD,
+	EXE_NOFILE,
+	EXE_NOPERM,
 	CD_NODIR,
 	CD_TOOMANY,
 	CD_STRNOTIN,

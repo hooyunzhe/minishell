@@ -79,3 +79,9 @@ echo ">>t"test
 ### parsing: single character in the beginning
 < test.txt echo hello (valid)
 e test (invalid)
+
+
+## To-do
+
+### pipes
+- Multiple redirection if there is an error with file oppening have to handle. Same for heredoc

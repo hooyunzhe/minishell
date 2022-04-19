@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 09:26:31 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/12 12:23:27 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/19 17:05:47 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,12 @@ void	mini_exit(t_data *data, t_cmd *cmd)
 
 	params = cmd->params;
 	printf("exit\n");
-	if (cmd->arg_count > 1)
+	if (cmd->arg_count == 0)
+	{
+		tcsetattr(0, 0, &data->original_term);
+		exit(0);
+	}
+	else if (cmd->arg_count > 1)
 		handle_error(EXIT_TOOMANY, NULL);
 	while (params && cmd->arg_count == 1)
 	{

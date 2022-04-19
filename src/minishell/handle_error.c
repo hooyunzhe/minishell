@@ -6,16 +6,20 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 15:56:13 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/13 16:04:34 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/19 11:31:22 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+// we need to change the fd to 2 to print to stderror
 int	handle_error(error_id id, char *param)
 {
 	if (id == EXE_NOCMD)
-		printf("bash: command not found: %s\n", param);
+		printf("minishell: command not found: %s\n", param);
+	else if (id == EXE_NOFILE)
+		printf("minishell: no such file or directory: %s\n", param);
+	else if (id == EXE_NOPERM)
+		printf("minishell: permission denied: %s\n", param);
 	else if (id == CD_NODIR)
 		printf("cd: no such file or directory: %s\n", param);
 	else if (id == CD_TOOMANY)

@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 15:36:26 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/14 18:52:53 by nazrinsha        ###   ########.fr       */
+/*   Updated: 2022/04/19 10:34:12 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	mini_echo(t_param *param)
 	chain_n = 0;
 	while (node)
 	{
+		// printf("[%s]\n", node->param_str);
 		if (node->param_type == OPTION)
 		{
 			if (!strncmpn(node->param_str + 1, 'n') && chain_n == 0)
