@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/19 17:02:06 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/22 15:03:13 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,27 @@ void	execute_builtin(t_data *data, t_cmd *cmd, builtin_cmd type)
 		mini_exit(data, cmd);
 }
 
-int	handle_redirections(t_cmd *cmd, t_param *params)
+int	handle_heredoc(t_data * data, char *delim)
+{
+	int		pipes[2];
+	char	*line;
+
+	pipe(pipes);
+	line = readline("heredoc > ");
+	while (line && ft_strncmp(line, delim, ft_strlen(delim) + 1))
+	{
+		line = get_expanded_param(data, line);
+		write(pipes[1], line, ft_strlen(line));
+		write(pipes[1], "\n", 1);
+		free(line);
+		line = readline("heredoc > ");
+	}
+	free(line);
+	close(pipes[1]);
+	return (pipes[0]);
+}
+
+int	handle_redirections(t_data *data, t_cmd *cmd, t_param *params)
 {
 	while (params)
 	{
@@ -85,6 +105,8 @@ int	handle_redirections(t_cmd *cmd, t_param *params)
 					close(cmd->output_fd);
 				if (params->redirection_type == S_IN)
 					cmd->input_fd = open(params->next->param_str, O_RDONLY);
+				else if (params->redirection_type == D_IN)
+					cmd->input_fd = handle_heredoc(data, params->next->param_str);
 				else if (params->redirection_type == S_OUT)
 					cmd->output_fd = open(params->next->param_str, O_WRONLY | O_CREAT, 0644);
 				else if (params->redirection_type == D_OUT)
@@ -92,9 +114,10 @@ int	handle_redirections(t_cmd *cmd, t_param *params)
 				if (cmd->input_fd == -1 || cmd->output_fd == -1)
 				{
 					if (errno == ENOENT)
-						return (handle_error(EXE_NOFILE, params->next->param_str));
+						handle_error(data, EXE_NOFILE, params->next->param_str);
 					if (errno == EACCES)
-						return (handle_error(EXE_NOPERM, params->next->param_str));
+						handle_error(data, EXE_NOPERM, params->next->param_str);
+					return (1);
 				}
 			}
 		}
@@ -170,7 +193,7 @@ void	execute_command(t_data *data, t_cmd *cmd, t_param *command_str)
 		execve(fullpath, params, envp);
 		i++;
 	}
-	handle_error(EXE_NOCMD, command_str->param_str);
+	handle_error(data, EXE_NOCMD, command_str->param_str);
 	exit(127);
 }
 
@@ -194,13 +217,13 @@ void	swap_new_fd(t_cmd *cmd)
 {
 	if (cmd->input_fd != 0)
 	{
-		dprintf(2, "input_fd: %d\n", cmd->input_fd);
+		// dprintf(2, "input_fd: %d\n", cmd->input_fd);
 		dup2(cmd->input_fd, 0);
 		close(cmd->input_fd);
 	}
 	if (cmd->output_fd != 1)
 	{
-		dprintf(2, "output_fd: %d\n", cmd->output_fd);
+		// dprintf(2, "output_fd: %d\n", cmd->output_fd);
 		dup2(cmd->output_fd, 1);
 		close(cmd->output_fd);
 	}
@@ -215,7 +238,7 @@ void	single_executor(t_data *data, t_cmd *cmd)
 	pid_t		pid;
 
 
-	if (handle_redirections(cmd, cmd->params) == 1)
+	if (handle_redirections(data, cmd, cmd->params) == 1)
 		return ;
 	swap_old_fd(&old_stdin, &old_stdout, 0);
 	swap_new_fd(cmd);
@@ -228,10 +251,10 @@ void	single_executor(t_data *data, t_cmd *cmd)
 		if (pid == 0)
 			execute_command(data, cmd, param_lstfind(cmd->params, COMMAND, 0));
 		waitpid(pid, &status, 0);
-		printf("Exited with code %d\n", WEXITSTATUS(status));
+		// printf("Exited with code %d\n", WEXITSTATUS(status));
+		data->exit_status = WEXITSTATUS(status);
 	}
 	swap_old_fd(&old_stdin, &old_stdout, 1);
-	data->exit_status = WEXITSTATUS(status);
 }
 
 void	multiple_executor(t_data *data, t_cmd *cmd)
@@ -256,7 +279,7 @@ void	multiple_executor(t_data *data, t_cmd *cmd)
 			// dprintf(2, "[in_fd: %d, out_fd: %d]\n", cmd->input_fd, cmd->output_fd);
 			handle_pipes(data, cmd, pipes, i);
 			// dprintf(2, "[in_fd: %d, out_fd: %d]\n", cmd->input_fd, cmd->output_fd);
-			handle_redirections(cmd, cmd->params);
+			handle_redirections(data, cmd, cmd->params);
 			swap_new_fd(cmd);
 			if (type != FAKE)
 			{
@@ -271,7 +294,7 @@ void	multiple_executor(t_data *data, t_cmd *cmd)
 		}
 		waitpid(-1, &status, 0);
 		close(pipes[1]);
-		printf("Exited with code %d\n", WEXITSTATUS(status));
+		// printf("Exited with code %d\n", WEXITSTATUS(status));
 		i++;
 		cmd = cmd->next;
 	}
@@ -279,9 +302,14 @@ void	multiple_executor(t_data *data, t_cmd *cmd)
 
 void	executor(t_data *data)
 {
-	// printf("cmd_count: %d\n", data->cmd_count);
-	if (data->cmd_count == 1)
-		single_executor(data, data->cmds);
-	else
-		multiple_executor(data, data->cmds);
+	if (data->cmds && data->cmds->params->param_str)
+	{
+		if (data->cmd_count == 1)
+		{
+			// printf("type: %d\n", data->cmds->params->param_type);
+			single_executor(data, data->cmds);
+		}
+		else
+			multiple_executor(data, data->cmds);
+	}
 }

@@ -1,0 +1,5 @@
+hello
+world
+heredoc
+works
+Exited with code 0

@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 09:26:31 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/19 17:05:47 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/21 16:09:13 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ void	mini_exit(t_data *data, t_cmd *cmd)
 		exit(0);
 	}
 	else if (cmd->arg_count > 1)
-		handle_error(EXIT_TOOMANY, NULL);
+		handle_error(data, EXIT_TOOMANY, NULL);
 	while (params && cmd->arg_count == 1)
 	{
 		if (params->param_type == ARGUMENT && ft_strisnum(params->param_str))
 		{
-			handle_error(EXIT_NONUM, params->param_str);
+			handle_error(data, EXIT_NONUM, params->param_str);
 			tcsetattr(0, 0, &data->original_term);
 			exit(0);
 		}

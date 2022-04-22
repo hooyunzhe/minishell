@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 15:36:26 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/19 10:34:12 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/22 15:53:15 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,10 @@ void	mini_echo(t_param *param)
 			}
 		}
 		if (node->param_type == ARGUMENT)
+		{
+			// printf("[%s]\n", node->param_str);
 			print_echo(node->param_str, node->next != NULL);
+		}
 		node = node->next;
 	}
 	if (has_option == 0)

@@ -124,12 +124,21 @@ typedef struct s_data
 	t_term	original_term;
 }			t_data;
 
-int			handle_error(error_id id, char *param);
+void		handle_error(t_data *data, error_id id, char *param);
 t_data		*new_data(char **envp);
 void		free_data(t_data *data);
 void		parser(t_data *data, char *line);
 int			minishell(t_data *data);
 void		init_env(t_data *data);
+void		count_args(t_cmd *cmd);
+
+
+// ---------- parser_utils ---------
+
+char		*get_envvar(char *line, int index);
+int			get_expanded_len(t_data *data, char *line);
+char		*get_expanded_param(t_data *data, char *line);
+int			get_envlen(t_data *data, char *line, int index);
 
 // ---------- command linked list functions ---------
 

@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 11:12:36 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/13 10:14:32 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/22 15:01:03 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	param_lstclear(t_param **params)
 	while (*params != NULL)
 	{
 		temp = (*params)->next;
-		free((*params)->param_str);
+		if ((*params)->param_str)
+			free((*params)->param_str);
 		free(*params);
 		*params = temp;
 	}

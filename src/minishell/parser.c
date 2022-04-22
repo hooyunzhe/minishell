@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/19 16:05:07 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/22 16:26:39 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	get_enclose_type(enclose enclose_type, char current_char)
 
 int	is_valid_var(char c)
 {
-	if (ft_isalnum(c) || c == '_')
+	if (ft_isalnum(c) || c == '_' || c == '?')
 		return (1);
 	return (0);
 }
@@ -82,56 +82,62 @@ int	check_input(char *str)
 	return (opened == 1 || opened == 2);
 }
 
-int	get_envlen(t_data *data, char *line, int index)
-{
-	int		i;
-	int 	len;
-	char	*temp;
+// int	get_envlen(t_data *data, char *line, int index)
+// {
+// 	int		i;
+// 	int 	len;
+// 	char	*temp;
 
-	//(*index)++;
-	i = index + 1;
-	while (line[i] && is_valid_var(line[i]))
-		i++;
-	temp = ft_substr(line, index + 1, i - index);
-	len = ft_strlen(mini_getenv(data, temp));
-	//(*index) = i - 1;
-	free(temp);
-	return (len);
-}
+// 	//(*index)++;
+// 	i = index + 1;
+// 	while (line[i] && is_valid_var(line[i]))
+// 		i++;
+// 	temp = ft_substr(line, index + 1, i - index - 1);
+// 	printf("temp = %s\n", temp);
+// 	len = ft_strlen(mini_getenv(data, temp));
+// 	//(*index) = i - 1;
+// 	free(temp);
+// 	return (len);
+// }
 
 char	*get_envvar(char *line, int index)
 {
 	int		i;
 
+	// printf("line: %s, index: %d\n", line, index);
 	i = index + 1;
 	while (line[i] && is_valid_var(line[i]))
 		i++;
-	//if (i == index && ft_strlen(line) == 1)
-		//return (line + 1);
-	return (ft_substr(line, index + 1, i - index));
+	// printf("after valid skip %s\n", line);
+	// printf("index = %d, i = %d\n", index, i);
+	// printf("temp = [%s]\n", ft_substr(line, index + 1, i - index - 1));
+	return (ft_substr(line, index + 1, i - index - 1));
 }
 
 int	get_expanded_len(t_data *data, char *line)
 {
 	int		i;
 	int		len;
+	int		enclose_type;
 	char	*temp;
 
 	i = 0;
 	len = 0;
+	enclose_type = CLOSED;
 	while (line[i])
 	{
-		if (line[i] == '$')
+		enclose_type = get_enclose_type(enclose_type, line[i]);
+		if (line[i] == '$' && line[i + 1] != ' ' && enclose_type != SINGLE)
 		{
 			temp = get_envvar(line, i);
-			len += ft_strlen(mini_getenv(data, temp));
+			len += ft_strlen(mini_getenv(data, temp)) + 2;
 			i += ft_strlen(temp);
 			free(temp);
 		}
-		if (line[i] == '~')
-			len += ft_strlen(mini_getenv(data, "HOME"));
 		else
 			len++;
+		if (line[i] == '~')
+			len += ft_strlen(mini_getenv(data, "HOME"));
 		i++;
 	}
 	return (len + 1);
@@ -153,10 +159,11 @@ char	*get_expanded_param(t_data *data, char *line)
 	while (line[i])
 	{
 		enclose_type = get_enclose_type(enclose_type, line[i]);
-		if (line[i] == '$' && enclose_type != SINGLE)
+		if (line[i] == '$' && line[i + 1] != ' ' && enclose_type != SINGLE)
 		{
+			// printf("type: %d\n", enclose_type);
 			env_var = get_envvar(line, i);
-			printf("env_var = [%s]\n", env_var);
+			// printf("env_var = [%s]\n", env_var);
 			if (line[i + 1] && ft_isdigit(line[i + 1]))
 				i++;
 			else if (!ft_strncmp(env_var, "?", 1))
@@ -183,7 +190,7 @@ char	*get_expanded_param(t_data *data, char *line)
 			}
 			free(env_var);
 		}
-		else if (line[i] == '~')
+		else if (line[i] == '~' && (ft_strlen(line) == 1 || line[i + 1] == '/'))
 		{
 			ft_memmove(&(expanded_line[j]), mini_getenv(data, "HOME"), ft_strlen(mini_getenv(data, "HOME")));
 			j += ft_strlen(mini_getenv(data, "HOME"));
@@ -194,7 +201,13 @@ char	*get_expanded_param(t_data *data, char *line)
 	}
 	expanded_line[j] = '\0';
 	free(line);
-	return (expanded_line);
+	if (ft_strlen(expanded_line) != 2)
+		return (expanded_line);
+	else
+	{
+		free(expanded_line);
+		return (NULL);
+	}
 }
 
 int	get_unquoted_len(char *line)
@@ -217,7 +230,7 @@ int	get_unquoted_len(char *line)
 		enclose_type = get_enclose_type(enclose_type, line[i]);
 		i++;
 	}
-	return (count);
+	return (count + 1);
 }
 
 char	*get_unquoted_param(char *line)
@@ -230,7 +243,7 @@ char	*get_unquoted_param(char *line)
 	i = 0;
 	j = 0;
 	enclose_type = CLOSED;
-	unquoted_line = malloc(sizeof(char) * (get_unquoted_len(line) + 1));
+	unquoted_line = malloc(sizeof(char) * get_unquoted_len(line));
 	while (line[i])
 	{
 		if ((line[i] != '\'' && line[i] != '\"')
@@ -247,7 +260,13 @@ char	*get_unquoted_param(char *line)
 
 param	get_param_type(char *param_str)
 {
-	if (param_str[0] == '-' && param_str[1])
+	int	i;
+
+	i = 0;
+	if ((param_str[i] == '\'' || param_str[i] == '\"')
+		&& param_str[i + 1] == '-')
+		i++;
+	if (param_str[i] == '-' && param_str[i + 1])
 		return (OPTION);
 	else if (!ft_strncmp(param_str, "<", ft_strlen(param_str))
 		|| !ft_strncmp(param_str, ">", ft_strlen(param_str))
@@ -262,7 +281,7 @@ void	update_param_type(t_param *params)
 	int	has_command;
 
 	has_command = 0;
-	if (params->param_type == ARGUMENT)
+	if (params->param_type == ARGUMENT || params->param_type == OPTION)
 	{
 		params->param_type = COMMAND;
 		has_command = 1;
@@ -271,11 +290,13 @@ void	update_param_type(t_param *params)
 	{
 		if (params->param_type == COMMAND)
 			has_command = 1;
-		if (params->param_type == REDIRECTION)
+		else if (params->param_type == REDIRECTION)
 			params->next->param_type = IO_FILE;
 		else if (params->param_type == ARGUMENT)
-			if (params->param_type == OPTION)
+		{
+			if (params->next->param_type == OPTION)
 				params->next->param_type = ARGUMENT;
+		}
 		if (!has_command && params->next->param_type == ARGUMENT)
 		{
 			params->next->param_type = COMMAND;
@@ -313,6 +334,13 @@ int	check_redirection_start(char *str)
 	return (0);
 }
 
+int		has_expand(char *line)
+{
+	if (ft_strchr(line, '?') || ft_strchr(line, '~') || ft_strchr(line, '$'))
+		return (1);
+	return (0);
+}
+
 void	get_param(t_data *data, t_cmd *cmd, char *param_str)
 {
 	param		param_type;
@@ -327,16 +355,19 @@ void	get_param(t_data *data, t_cmd *cmd, char *param_str)
 	modified_param = ft_substr(param_str, start_index, ft_strlen(param_str) - start_index);
 	param_type = get_param_type(modified_param);
 	redirection_type = get_redirection_type(modified_param, param_type);
-	if (!cmd->params || (param_lstlast(cmd->params))->redirection_type != D_IN)
+	// printf("line = %s\n", modified_param);
+	if ((!cmd->params || (param_lstlast(cmd->params))->redirection_type != D_IN)
+		&& has_expand(modified_param))
 	{
 		modified_param = get_expanded_param(data, modified_param);
 		//printf("expanded param: %s\n", modified_param);
 	}
-	//printf("END\n");
-	modified_param = get_unquoted_param(modified_param);
-	// printf("unquoted param: [%d]\n", modified_param[0]);
-	if (modified_param[0])
+	if (modified_param)
 	{
+		//printf("END\n");
+		modified_param = get_unquoted_param(modified_param);
+		// printf("unquoted param: [%d]\n", modified_param[0]);
+		// printf("param: [%s]\n", modified_param);
 		current_param = new_param(modified_param, param_type, redirection_type);
 		param_lstadd_back(&cmd->params, current_param);
 	}
@@ -360,7 +391,7 @@ t_cmd	*get_cmd(t_data *data, char *line)
 		if ((is_closed(enclose_type, line[i])
 			|| get_enclose_type(enclose_type, line[i]) == NORMAL)
 			&& (line[i + 1] == ' ' || !line[i + 1]) && len > 0)
-		{		
+		{
 			get_param(data, cmd, ft_substr(line, i - len + 1, len));
 			len = 0;
 		}
@@ -369,6 +400,8 @@ t_cmd	*get_cmd(t_data *data, char *line)
 	}
 	if (cmd->params)
 		update_param_type(cmd->params);
+	else
+		param_lstadd_back(&cmd->params, new_param(NULL, COMMAND, -1));
 	return (cmd);
 }
 
@@ -383,7 +416,7 @@ int		get_cmd_count(char *line)
 	enclose_type = CLOSED;
 	while (line[i])
 	{
-		enclose_type = get_enclose_type(enclose_type, line[0]);
+		enclose_type = get_enclose_type(enclose_type, line[i]);
 		if (((enclose_type == CLOSED || enclose_type == NORMAL)
 			&& line[i] == '|') || !line[i + 1])
 			len++;
@@ -432,7 +465,7 @@ void	parser(t_data *data, char *line)
 	cmd_strs = get_cmd_strs(line);
 	while (cmd_strs[i])
 	{
-		//printf("cmd_str: %s\n", cmd_strs[i]);
+		// printf("cmd_str: %s\n", cmd_strs[i]);
 		if (check_input(line))
 			break ;
 		cmd_lstadd_back(&data->cmds, get_cmd(data, cmd_strs[i]));

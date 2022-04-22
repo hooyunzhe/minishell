@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 17:22:14 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/18 13:16:36 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/21 16:16:58 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,10 @@ static int	handle_replaced_path(t_data *data, t_cmd *cmd, char **path)
 	pwd = mini_getenv(data, "PWD");
 	*path = replace_str(pwd, old, new);
 	if (!(*path))
-		return (handle_error(CD_STRNOTIN, old));
+	{
+		handle_error(data, CD_STRNOTIN, old);
+		return (1);
+	}
 	return (0);
 }	
 
@@ -105,7 +108,7 @@ void	mini_chdir(t_data *data, t_cmd *cmd)
 	char	*param_path;
 
 	if ((cmd->option_count + cmd->arg_count) > 2)
-		return ((void)handle_error(CD_TOOMANY, NULL));
+		return (handle_error(data, CD_TOOMANY, NULL));
 	else if ((cmd->option_count + cmd->arg_count) == 2)
 	{
 		if (handle_replaced_path(data, cmd, &path) == 1)
@@ -124,12 +127,14 @@ void	mini_chdir(t_data *data, t_cmd *cmd)
 	if (chdir(path) == -1)
 	{
 		if (errno == ENOTDIR)
-			return ((void)handle_error(CD_NOTADIR, path));
+			handle_error(data, CD_NOTADIR, path);
 		else if (errno == EACCES)
-			return ((void)handle_error(CD_NOACCESS, path));
-		return ((void)handle_error(CD_NODIR, path));
+			handle_error(data, CD_NOACCESS, path);
+		else
+			handle_error(data, CD_NODIR, path);
 	}
-	update_env_pwd(data);
+	else
+		update_env_pwd(data);
 }
 
 void	mini_pwd(void)

@@ -6,35 +6,60 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 15:56:13 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/19 11:31:22 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/22 14:56:45 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-// we need to change the fd to 2 to print to stderror
-int	handle_error(error_id id, char *param)
+
+// change dprintf to std_err
+
+void	handle_exe_error(t_data *data, error_id id, char *param)
 {
+	data->exit_status = 1;
 	if (id == EXE_NOCMD)
-		printf("minishell: command not found: %s\n", param);
+	{
+		dprintf(2, "minishell: command not found: %s\n", param);
+		data->exit_status = 127;
+	}
 	else if (id == EXE_NOFILE)
-		printf("minishell: no such file or directory: %s\n", param);
+		dprintf(2, "minishell: no such file or directory: %s\n", param);
 	else if (id == EXE_NOPERM)
-		printf("minishell: permission denied: %s\n", param);
-	else if (id == CD_NODIR)
-		printf("cd: no such file or directory: %s\n", param);
+		dprintf(2, "minishell: permission denied: %s\n", param);
+}
+
+void	handle_cd_error(t_data *data, error_id id, char *param)
+{
+	data->exit_status = 1;
+	if (id == CD_NODIR)
+		dprintf(2, "cd: no such file or directory: %s\n", param);
 	else if (id == CD_TOOMANY)
-		printf("cd: too many arguments\n");
+		dprintf(2, "cd: too many arguments\n");
 	else if (id == CD_STRNOTIN)
-		printf("cd: string not in pwd: %s\n", param);
+		dprintf(2, "cd: string not in pwd: %s\n", param);
 	else if (id == CD_NOTADIR)
-		printf("cd: not a directory: %s\n", param);
+		dprintf(2, "cd: not a directory: %s\n", param);
 	else if (id == CD_NOACCESS)
-		printf("cd: permission denied: %s\n", param);
-	else if (id == EXP_NOTVALID)
-		printf("export: not a valid identifier: %s\n", param);
-	else if (id == EXIT_NONUM)
-		printf("exit: numeric argument required: %s\n", param);
+		dprintf(2, "cd: permission denied: %s\n", param);
+}
+
+void	handle_exit_error(t_data *data, error_id id, char *param)
+{
+	data->exit_status = 1;
+	if (id == EXIT_NONUM)
+		dprintf(2, "exit: numeric argument required: %s\n", param);
 	else if (id == EXIT_TOOMANY)
-		printf("exit: too many arguments\n");
-	return (1);
+		dprintf(2, "exit: too many arguments\n");
+}
+
+void	handle_error(t_data *data, error_id id, char *param)
+{
+	if (id <= EXE_NOPERM)
+		handle_exe_error(data, id, param);
+	else if (id <= CD_NOACCESS)
+		handle_cd_error(data, id, param);
+	else if (id == EXP_NOTVALID)
+		dprintf(2, "export: not a valid identifier: %s\n", param);
+	else if (id <= EXIT_TOOMANY)
+		handle_exit_error(data, id, param);
 }
