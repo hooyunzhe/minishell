@@ -55,6 +55,7 @@ typedef enum enclose
 
 typedef enum error_id
 {
+	PARSE_ERR,
 	EXE_NOCMD,
 	EXE_NOFILE,
 	EXE_NOPERM,
@@ -64,6 +65,7 @@ typedef enum error_id
 	CD_NOTADIR,
 	CD_NOACCESS,
 	EXP_NOTVALID,
+	UNS_NOTVALID,
 	EXIT_NONUM,
 	EXIT_TOOMANY
 }	error_id;
@@ -156,11 +158,14 @@ void	param_lstclear(t_param **params);
 
 // ---------- env linked list functions ---------
 
+t_envp	*env_lstfind(t_envp *lst, char *key);
 t_envp	*env_lstnew(char *key, char *value);
 t_envp	*env_lstlast(t_envp *lst);
+int		env_lstupdate(t_envp *lst, char *key, char *value);
 int		env_lst_getlen(t_envp *envp);
 void	env_lstadd_back(t_envp **lst, t_envp *new);
 void	env_lstdelnext(t_envp *head);
+void	env_lstdel(t_envp **head, t_envp *to_del);
 
 // ---------- get env functions ------------
 

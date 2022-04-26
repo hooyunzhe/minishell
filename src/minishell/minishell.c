@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:22:40 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/22 14:21:14 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/26 10:39:08 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	minishell(t_data *data)
 		count_args(data->cmds);
 		add_history(line);
 		executor(data);
-
+		// printf("exit: %d\n", data->exit_status);
 		// t_cmd	*cmds;
 
 		// cmds = data->cmds;
@@ -71,7 +71,10 @@ int	minishell(t_data *data)
 	}
 	if (!line)
 	{
-		printf("exit\n");
+		// printf("exit\n");
+		free(line);
+		cmd_lstclear(&(data->cmds));
+		// system("leaks minishell");
 		exit(0); //change to our own exit function later
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 09:26:31 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/21 16:09:13 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/26 11:30:02 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,26 @@
 
 int	ft_strisnum(char *str)
 {
-	while (*str)
+	int	i;
+
+	i = 0;
+	while (str[i] == '+' || str[i] == '-')
+		i++;
+	if (i > 1)
+		return (0);
+	while (str[i])
 	{
-		if (!ft_isdigit(*str - '0'))
+		if (!ft_isdigit(str[i]))
 			return (0);
-		str++;
+		i++;
 	}
 	return (1);
+}
+
+void	ft_exit(t_data *data, int exit_num)
+{
+	tcsetattr(0, 0, &data->original_term);
+	exit(exit_num);
 }
 
 void	mini_exit(t_data *data, t_cmd *cmd)
@@ -28,21 +41,25 @@ void	mini_exit(t_data *data, t_cmd *cmd)
 	t_param	*params;
 
 	params = cmd->params;
-	printf("exit\n");
-	if (cmd->arg_count == 0)
+	// printf("exit\n");
+	if ((cmd->arg_count + cmd->option_count) == 0)
+		ft_exit(data, data->exit_status);
+	else if ((cmd->arg_count + cmd->option_count) > 1)
 	{
-		tcsetattr(0, 0, &data->original_term);
-		exit(0);
-	}
-	else if (cmd->arg_count > 1)
 		handle_error(data, EXIT_TOOMANY, NULL);
-	while (params && cmd->arg_count == 1)
+		if (!ft_strisnum(params->next->param_str))
+			data->exit_status = 255;
+	}
+	while (params && (cmd->arg_count + cmd->option_count) == 1)
 	{
-		if (params->param_type == ARGUMENT && ft_strisnum(params->param_str))
+		if (params->param_type == ARGUMENT || params->param_type == OPTION)
 		{
-			handle_error(data, EXIT_NONUM, params->param_str);
-			tcsetattr(0, 0, &data->original_term);
-			exit(0);
+			if (!ft_strisnum(params->param_str))
+			{
+				handle_error(data, EXIT_NONUM, params->param_str);
+				ft_exit(data, 255);
+			}
+			ft_exit(data, ft_atoi(params->param_str));
 		}
 		params = params->next;
 	}

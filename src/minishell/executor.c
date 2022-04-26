@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/22 15:03:13 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/26 10:37:02 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,11 +182,14 @@ void	execute_command(t_data *data, t_cmd *cmd, t_param *command_str)
 	char	*temp;
 
 	params = get_param_array(cmd);
-	paths = ft_split(mini_getenv(data, "PATH"), ':');
+	if (mini_getenv(data, "PATH"))
+		paths = ft_split(mini_getenv(data, "PATH"), ':');
+	else
+		paths = NULL;
 	envp = env_lst_to_arr(data->mini_envp);
 	execve(params[0], params, envp);
 	i = 0;
-	while (paths[i])
+	while (paths && paths[i])
 	{
 		temp = ft_strjoin(paths[i], "/");
 		fullpath = ft_strjoin(temp, command_str->param_str);
@@ -294,6 +297,7 @@ void	multiple_executor(t_data *data, t_cmd *cmd)
 		}
 		waitpid(-1, &status, 0);
 		close(pipes[1]);
+		data->exit_status = WEXITSTATUS(status);
 		// printf("Exited with code %d\n", WEXITSTATUS(status));
 		i++;
 		cmd = cmd->next;

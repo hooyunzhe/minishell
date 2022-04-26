@@ -6,11 +6,27 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 11:53:32 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/21 16:06:55 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/26 10:33:29 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	check_valid_key(char *key)
+{
+	int	i;
+
+	i = 0;
+	if (!key || ft_isdigit(key[i]) || key[i] == '=')
+		return (0);
+	while (key[i] && key[i] != '=')
+	{
+		if (!ft_isalnum(key[i]) && key[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 char	*get_key(char *str)
 {
@@ -21,8 +37,6 @@ char	*get_key(char *str)
 	{
 		if (str[i] == '=')
 			return (ft_substr(str, 0, i));
-		if (!ft_isalnum(str[i]))
-			return (NULL);
 		i++;
 	}
 	return (ft_strdup(str));
@@ -31,20 +45,19 @@ char	*get_key(char *str)
 void	mini_unset(t_data *data, t_cmd *cmd)
 {
 	t_envp	*curr;
-	t_envp	*prev;
 	t_param	*node;
 
 	node = cmd->params;
 	while (node)
 	{
 		curr = data->mini_envp;
-		prev = curr;
+		if (ft_strchr(node->param_str, '=') || !check_valid_key(node->param_str))
+			handle_error(data, EXP_NOTVALID, node->param_str);
 		while (curr)
 		{
-			if (curr->next)
-				if (!ft_strncmp(node->param_str, curr->key, ft_strlen(node->param_str)))
-					env_lstdelnext(prev);
-			prev = curr;
+			if (node)
+				if (!ft_strncmp(node->param_str, curr->key, ft_strlen(node->param_str) + 1))
+					env_lstdel(&data->mini_envp, curr);
 			curr = curr->next;
 		}
 		node = node->next;
@@ -75,9 +88,9 @@ void	mini_export(t_data *data, t_cmd *cmd)
 		{
 			if (node->param_type == ARGUMENT)
 			{
+				if (!check_valid_key(node->param_str))
+					return (handle_error(data, EXP_NOTVALID, node->param_str));
 				key = get_key(node->param_str);
-				if (!key)
-					handle_error(data, EXP_NOTVALID, node->param_str);
 				if (ft_strlen(key) == ft_strlen(node->param_str)
 					|| ft_strlen(key) == ft_strlen(node->param_str) - 1)
 					value = ft_strdup("");
@@ -86,7 +99,8 @@ void	mini_export(t_data *data, t_cmd *cmd)
 					value = ft_substr(node->param_str, ft_strlen(key) + 1,
 						ft_strlen(node->param_str) - ft_strlen(key));
 				}
-				env_lstadd_back(&head, env_lstnew(key, value));
+				if (!env_lstupdate(head, key, value))
+					env_lstadd_back(&head, env_lstnew(key, value));
 			}
 			node = node->next;
 		}
@@ -100,7 +114,7 @@ char	*mini_getenv(t_data *data, char *key)
 	node = data->mini_envp;
 	while (node)
 	{
-		if (!ft_strncmp(key, node->key, ft_strlen(key)))
+		if (!ft_strncmp(key, node->key, ft_strlen(key) + 1))
 			return (node->value);
 		node = node->next;
 	}

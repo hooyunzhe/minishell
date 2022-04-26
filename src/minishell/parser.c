@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/22 16:26:39 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/25 18:27:08 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	is_valid_var(char c)
 	return (0);
 }
 
-int	check_input(char *str)
+char	check_unclosed(char *str)
 {
 	int	i;
 	int	opened;
@@ -79,7 +79,85 @@ int	check_input(char *str)
 			opened = 0;
 		i++;
 	}
-	return (opened == 1 || opened == 2);
+	if (opened == 1)
+		return ('\'');
+	else if (opened == 2)
+		return ('\"');
+	return (0);
+}
+
+char	check_pipe_err(char *str)
+{
+	int		i;
+	int		has_arg;
+	enclose	enclose_type;
+
+	i = 0;
+	has_arg = 0;
+	enclose_type = CLOSED;
+	while (str[i])
+	{
+		enclose_type = get_enclose_type(enclose_type, str[i]);
+		if (enclose_type == NORMAL || enclose_type == CLOSED)
+		{
+			if (str[i] == '|' || !str[i + 1])
+			{
+				if (!has_arg)
+					break;
+				else
+					has_arg = 0;
+			}
+			if (str[i] != '|' && str[i] != ' ' && str[i] != '<' && str[i] != '>')
+				has_arg = 1;
+		}
+		i++;
+	}
+	if (!has_arg)
+		return ('|');
+	return (0);
+}
+
+char	check_redirection_err(char *str)
+{
+	int		i;
+	int		has_arrow;
+	enclose	enclose_type;
+
+	i = 0;
+	has_arrow = 0;
+	enclose_type = CLOSED;
+	while (str[i])
+	{
+		enclose_type = get_enclose_type(enclose_type, str[i]);
+		if (enclose_type == NORMAL || enclose_type == CLOSED)
+		{
+			if (str[i] == '<')
+				has_arrow = 1;
+			else if (str[i] == '>')
+				has_arrow = 2;
+			else if (str[i] != ' ')
+				has_arrow = 0;
+		}
+		i++;
+	}
+	if (has_arrow == 1)
+		return ('<');
+	if (has_arrow == 2)
+		return ('>');
+	return (0);	
+}
+
+char	check_input(char *str)
+{
+	char	error;
+
+	error = 0;
+	error = check_unclosed(str);
+	if (!error && ft_strchr(str, '|'))
+		error = check_pipe_err(str);
+	if (!error)
+		error = check_redirection_err(str);
+	return (error);
 }
 
 // int	get_envlen(t_data *data, char *line, int index)
@@ -457,17 +535,20 @@ char	**get_cmd_strs(char *line)
 
 void	parser(t_data *data, char *line)
 {
-	int		i;
 	char	**cmd_strs;
+	int		i;
+	char	err[2];
 
+	err[1] = '\0';
+	err[0] = check_input(line);
+	if (err[0])
+		return ((void)handle_error(data, PARSE_ERR, err));
 	i = 0;
 	data->cmd_count = get_cmd_count(line);
 	cmd_strs = get_cmd_strs(line);
 	while (cmd_strs[i])
 	{
 		// printf("cmd_str: %s\n", cmd_strs[i]);
-		if (check_input(line))
-			break ;
 		cmd_lstadd_back(&data->cmds, get_cmd(data, cmd_strs[i]));
 		i++;
 	}
