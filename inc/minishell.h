@@ -135,12 +135,25 @@ void		init_env(t_data *data);
 void		count_args(t_cmd *cmd);
 
 
-// ---------- parser_utils ---------
+// ---------- parser functions ---------------
 
-char		*get_envvar(char *line, int index);
-int			get_expanded_len(t_data *data, char *line);
-char		*get_expanded_param(t_data *data, char *line);
-int			get_envlen(t_data *data, char *line, int index);
+// check -----------------------------
+
+char	check_input(char *str);
+
+// type -----------------------------
+
+enclose	is_closed(enclose enclose_type, char current_char);
+enclose	get_enclose_type(enclose enclose_type, char current_char);
+param	get_param_type(char *param_str);
+void	update_param_type(t_param *params);
+redirection	get_redirection_type(char *param_str, param param_type);
+
+// expansion -----------------------------
+
+char	*get_expanded_param(t_data *data, char *line, int len);
+char	*get_envvar(char *line, int index);
+int		get_expanded_len(t_data *data, char *line);
 
 // ---------- command linked list functions ---------
 

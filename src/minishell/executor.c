@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 14:04:08 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/27 16:29:17 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	handle_heredoc(t_data * data, char *delim)
 	line = readline("heredoc > ");
 	while (line && ft_strncmp(line, delim, ft_strlen(delim) + 1))
 	{
-		line = get_expanded_param(data, line);
+		line = get_expanded_param(data, line, ft_strlen(line));
 		write(pipes[1], line, ft_strlen(line));
 		write(pipes[1], "\n", 1);
 		free(line);
