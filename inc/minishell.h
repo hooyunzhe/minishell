@@ -154,7 +154,6 @@ t_param	*new_param(char *param_str, param param_type, redirection redirection_ty
 t_param	*param_lstfind(t_param *node, param type, int index);
 t_param	*param_lstlast(t_param *param);
 void	param_lstadd_back(t_param **param, t_param *new_param);
-void	param_lstclear(t_param **params);
 
 // ---------- env linked list functions ---------
 

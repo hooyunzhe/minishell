@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 10:15:40 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/27 10:55:01 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,28 +27,37 @@ char	*ft_strtolower(char *str)
 	return (res);
 }
 
+int	ft_strncasecmp(char *s1, char *s2, int n)
+{
+	if (n == 0)
+		return (0);
+	while (*s1 && ft_tolower(*s1) == ft_tolower(*s2) && --n)
+	{
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)ft_tolower(*s1) - (unsigned char)ft_tolower(*s2));
+}
+
 builtin_cmd		check_builtin(t_param *param)
 {
 	t_param	*command;
-	char	*lower_str;
 
 	command = param_lstfind(param, COMMAND, 0);
-	lower_str = ft_strtolower(command->param_str);
-	if (!ft_strncmp(lower_str, "echo", 5))
+	if (!ft_strncasecmp(command->param_str, "echo", 5))
 		return (MINI_ECHO);
-	if (!ft_strncmp(lower_str, "cd", 3))
+	if (!ft_strncasecmp(command->param_str, "cd", 3))
 		return (MINI_CD);
-	if (!ft_strncmp(lower_str, "pwd", 4))
+	if (!ft_strncasecmp(command->param_str, "pwd", 4))
 		return (MINI_PWD);
-	if (!ft_strncmp(lower_str, "export", 7))
+	if (!ft_strncasecmp(command->param_str, "export", 7))
 		return (MINI_EXPORT);
-	if (!ft_strncmp(lower_str, "unset", 6))
+	if (!ft_strncasecmp(command->param_str, "unset", 6))
 		return (MINI_UNSET);
-	if (!ft_strncmp(lower_str, "env", 4))
+	if (!ft_strncasecmp(command->param_str, "env", 4))
 		return (MINI_ENV);
-	if (!ft_strncmp(lower_str, "exit", 5))
+	if (!ft_strncasecmp(command->param_str, "exit", 5))
 		return (MINI_EXIT);
-	free(lower_str);
 	return (FAKE);
 }
 

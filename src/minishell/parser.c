@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/26 14:16:50 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/27 11:08:45 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,24 +159,6 @@ char	check_input(char *str)
 		error = check_redirection_err(str);
 	return (error);
 }
-
-// int	get_envlen(t_data *data, char *line, int index)
-// {
-// 	int		i;
-// 	int 	len;
-// 	char	*temp;
-
-// 	//(*index)++;
-// 	i = index + 1;
-// 	while (line[i] && is_valid_var(line[i]))
-// 		i++;
-// 	temp = ft_substr(line, index + 1, i - index - 1);
-// 	printf("temp = %s\n", temp);
-// 	len = ft_strlen(mini_getenv(data, temp));
-// 	//(*index) = i - 1;
-// 	free(temp);
-// 	return (len);
-// }
 
 char	*get_envvar(char *line, int index)
 {
@@ -431,6 +413,7 @@ void	get_param(t_data *data, t_cmd *cmd, char *param_str)
 	if (start_index > 0)
 		get_param(data, cmd, ft_substr(param_str, 0, start_index));
 	modified_param = ft_substr(param_str, start_index, ft_strlen(param_str) - start_index);
+	free(param_str);
 	param_type = get_param_type(modified_param);
 	redirection_type = get_redirection_type(modified_param, param_type);
 	// printf("line = %s\n", modified_param);

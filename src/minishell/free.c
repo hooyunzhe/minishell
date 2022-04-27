@@ -6,13 +6,13 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 11:12:36 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/22 15:01:03 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/27 11:18:00 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	param_lstclear(t_param **params)
+static void	param_lstclear(t_param **params)
 {
 	t_param	*temp;
 
@@ -23,6 +23,21 @@ void	param_lstclear(t_param **params)
 			free((*params)->param_str);
 		free(*params);
 		*params = temp;
+	}
+}
+
+
+static void	env_lstclear(t_envp **envp)
+{
+	t_envp	*temp;
+
+	while (*envp != NULL)
+	{
+		temp = (*envp)->next;
+		free((*envp)->key);
+		free((*envp)->value);
+		free(*envp);
+		*envp = temp;
 	}
 }
 
@@ -38,8 +53,8 @@ void	cmd_lstclear(t_cmd **cmds)
 		*cmds = temp;
 	}
 }
-
 void	free_data(t_data *data)
 {
 	cmd_lstclear(&(data->cmds));
+	env_lstclear(&(data->mini_envp));
 }
