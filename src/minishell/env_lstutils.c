@@ -1,21 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_utils.c                                  :+:      :+:    :+:   */
+/*   env_lstutils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/27 10:33:50 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 11:55:13 by hyun-zhe         ###   ########.fr       */
+/*   Created: 2022/04/27 14:19:15 by hyun-zhe          #+#    #+#             */
+/*   Updated: 2022/04/27 14:20:12 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_exit(t_data *data, int exit_num)
+t_envp	*env_lstfind(t_envp *lst, char *key)
 {
-	tcsetattr(0, 0, &data->original_term);
-	free_data(data);
-	// system("leaks minishell");
-	exit(exit_num);
+	while (lst)
+	{
+		if (!ft_strncmp(lst->key, key, ft_strlen(key) + 1))
+			return (lst);
+		lst = lst->next;
+	}
+	return (NULL);
+}
+
+int		env_lst_getlen(t_envp *envp)
+{
+	int	count;
+
+	count = 0;
+	while (envp)
+	{
+		count++;
+		envp = envp->next;
+	}
+	return (count);
 }

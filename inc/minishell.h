@@ -144,27 +144,27 @@ int			get_envlen(t_data *data, char *line, int index);
 
 // ---------- command linked list functions ---------
 
-t_cmd	*new_cmd(void);
+t_cmd	*cmd_lstnew(void);
 void	cmd_lstclear(t_cmd **cmds);
 void	cmd_lstadd_back(t_cmd **cmd, t_cmd *new_cmd);
 
 // ---------- param linked list functions ---------
 
-t_param	*new_param(char *param_str, param param_type, redirection redirection_type);
+t_param	*param_lstnew(char *param_str, param param_type, redirection redirection_type);
 t_param	*param_lstfind(t_param *node, param type, int index);
 t_param	*param_lstlast(t_param *param);
-void	param_lstadd_back(t_param **param, t_param *new_param);
+void	param_lstadd_back(t_param **param, t_param *param_lstnew);
+void	param_lstclear(t_param **params);
 
 // ---------- env linked list functions ---------
 
 t_envp	*env_lstfind(t_envp *lst, char *key);
 t_envp	*env_lstnew(char *key, char *value);
-t_envp	*env_lstlast(t_envp *lst);
 int		env_lstupdate(t_envp *lst, char *key, char *value);
 int		env_lst_getlen(t_envp *envp);
 void	env_lstadd_back(t_envp **lst, t_envp *new);
-void	env_lstdelnext(t_envp *head);
 void	env_lstdel(t_envp **head, t_envp *to_del);
+void	env_lstclear(t_envp **envp);
 
 // ---------- builtin functions ------------
 

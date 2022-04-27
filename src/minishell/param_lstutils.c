@@ -1,32 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_env.c                                         :+:      :+:    :+:   */
+/*   param_lstutils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/29 10:37:55 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/19 16:54:17 by hyun-zhe         ###   ########.fr       */
+/*   Created: 2022/04/27 14:22:56 by hyun-zhe          #+#    #+#             */
+/*   Updated: 2022/04/27 14:23:11 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	init_env(t_data *data)
+t_param	*param_lstfind(t_param *node, param type, int index)
 {
-	int		i;
-	char	*key;
-	char	*value;
-	t_envp	*head;
-
-	i = 0;
-	head = NULL;
-	while (data->envp[i])
+	while (node)
 	{
-		value = ft_strdup(ft_strchr(data->envp[i], '=') + 1);
-		key = ft_substr(data->envp[i], 0, ft_strlen(data->envp[i]) - ft_strlen(value) - 1);
-		env_lstadd_back(&head, env_lstnew(key, value));
-		i++;
+		if (node->param_type == type && index-- == 0)
+			return (node);
+		node = node->next;
 	}
-	data->mini_envp = head;
+	return (NULL);
+}
+
+t_param	*param_lstlast(t_param *param)
+{
+	while (param && param->next != NULL)
+		param = param->next;
+	return (param);
 }

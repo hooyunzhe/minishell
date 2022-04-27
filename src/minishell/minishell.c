@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:22:40 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 10:57:29 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/27 11:52:06 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,26 +44,6 @@ int	minishell(t_data *data)
 		count_args(data->cmds);
 		add_history(line);
 		executor(data);
-		// printf("exit: %d\n", data->exit_status);
-		// t_cmd	*cmds;
-
-		// cmds = data->cmds;
-		// while (cmds)
-		// {
-		// 	printf("params: \n");
-		// 	t_param	*params;
-
-		// 	params = cmds->params;
-		// 	while (params != NULL)
-		// 	{
-		// 		printf("[[%s], %d, %d] \n", params->param_str, params->param_type, params->redirection_type);
-		// 		// printf("here = [%s]\n", params->param_str);
-		// 		params = params->next;
-		// 	}
-		// 	//printf("param_count: %d\n", cmds->param_count);
-		// 	printf("\n");
-		// 	cmds = cmds->next;
-		// }
 		cmd_lstclear(&(data->cmds));
 		data->cmd_count = 0;
 		free(line);
@@ -71,11 +51,8 @@ int	minishell(t_data *data)
 	}
 	if (!line)
 	{
-		// printf("exit\n");
 		free(line);
-		cmd_lstclear(&(data->cmds));
-		// system("leaks minishell");
-		ft_exit(data, 0); //change to our own exit function later
+		ft_exit(data, 0);
 	}
 	return (0);
 }

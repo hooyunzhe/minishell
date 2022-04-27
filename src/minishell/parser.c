@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 11:08:45 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/27 11:46:46 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -429,7 +429,7 @@ void	get_param(t_data *data, t_cmd *cmd, char *param_str)
 		modified_param = get_unquoted_param(modified_param);
 		// printf("unquoted param: [%d]\n", modified_param[0]);
 		// printf("param: [%s]\n", modified_param);
-		current_param = new_param(modified_param, param_type, redirection_type);
+		current_param = param_lstnew(modified_param, param_type, redirection_type);
 		param_lstadd_back(&cmd->params, current_param);
 	}
 }
@@ -444,7 +444,7 @@ t_cmd	*get_cmd(t_data *data, char *line)
 	i = 0;
 	len = 0;
 	enclose_type = CLOSED;
-	cmd = new_cmd();
+	cmd = cmd_lstnew();
 	while (line[i])
 	{
 		// printf("i: %d, len: %d, line[i]: %c, enclose_type: %d\n", i, len, line[i], enclose_type);
@@ -462,7 +462,7 @@ t_cmd	*get_cmd(t_data *data, char *line)
 	if (cmd->params)
 		update_param_type(cmd->params);
 	else
-		param_lstadd_back(&cmd->params, new_param(NULL, COMMAND, -1));
+		param_lstadd_back(&cmd->params, param_lstnew(NULL, COMMAND, -1));
 	return (cmd);
 }
 

@@ -1,43 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   cmd_lstfunc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/29 11:12:36 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 11:18:00 by hyun-zhe         ###   ########.fr       */
+/*   Created: 2022/04/27 14:20:37 by hyun-zhe          #+#    #+#             */
+/*   Updated: 2022/04/27 14:21:49 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	param_lstclear(t_param **params)
+t_cmd	*cmd_lstnew(void)
 {
-	t_param	*temp;
+	t_cmd	*cmds;
 
-	while (*params != NULL)
-	{
-		temp = (*params)->next;
-		if ((*params)->param_str)
-			free((*params)->param_str);
-		free(*params);
-		*params = temp;
-	}
+	cmds = malloc(sizeof(t_cmd));
+	cmds->params = NULL;
+	cmds->next = NULL;
+	cmds->param_count = 0;
+	cmds->arg_count = 0;
+	cmds->option_count = 0;
+	cmds->input_fd = 0;
+	cmds->output_fd = 1;
+	return (cmds);
 }
 
-
-static void	env_lstclear(t_envp **envp)
+void	cmd_lstadd_back(t_cmd **cmd, t_cmd *new_cmd)
 {
-	t_envp	*temp;
+	t_cmd	*last;
 
-	while (*envp != NULL)
+	if (cmd)
 	{
-		temp = (*envp)->next;
-		free((*envp)->key);
-		free((*envp)->value);
-		free(*envp);
-		*envp = temp;
+		if (*cmd)
+		{
+			last = *cmd;
+			while (last->next != NULL)
+				last = last->next;
+			last->next = new_cmd;
+		}
+		else
+			*cmd = new_cmd;
 	}
 }
 
@@ -52,9 +56,4 @@ void	cmd_lstclear(t_cmd **cmds)
 		free(*cmds);
 		*cmds = temp;
 	}
-}
-void	free_data(t_data *data)
-{
-	cmd_lstclear(&(data->cmds));
-	env_lstclear(&(data->mini_envp));
 }

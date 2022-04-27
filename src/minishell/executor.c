@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 10:55:01 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/27 14:04:08 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ void	execute_command(t_data *data, t_cmd *cmd, t_param *command_str)
 		i++;
 	}
 	handle_error(data, EXE_NOCMD, command_str->param_str);
-	exit(127);
+	ft_exit(data, 127);
 }
 
 void	swap_old_fd(int *old_stdin, int *old_stdout, int type)
@@ -296,7 +296,7 @@ void	multiple_executor(t_data *data, t_cmd *cmd)
 			if (type != FAKE)
 			{
 				execute_builtin(data, cmd, type);
-				exit(0);
+				ft_exit(data, data->exit_status);
 			}
 			else
 			{

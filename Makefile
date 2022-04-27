@@ -5,10 +5,10 @@ OBJ_DIR		= obj
 LIBFT_DIR	= src/libft
 INC_DIR		= inc
 
-SRC_FILES	= main.c minishell.c parser.c init_env.c env_lstfunc.c mini_unset.c\
-			  param_lstfunc.c param_newfunc.c free.c signals.c mini_echo.c\
+SRC_FILES	= main.c minishell.c parser.c env_lstfunc.c env_lstutils.c mini_unset.c\
+			  param_lstfunc.c param_lstutils.c cmd_lstfunc.c signals.c mini_echo.c\
 			  handle_error.c executor.c mini_exit.c mini_env.c mini_export.c builtin_utils.c\
-			  mini_pwd.c mini_cd.c minishell_utils.c
+			  mini_pwd.c mini_cd.c minishell_utils.c init_data.c
 
 OBJ_FILES	= ${addprefix ${OBJ_DIR}/, ${SRC_FILES:.c=.o}}
 

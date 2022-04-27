@@ -1,42 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   param_newfunc.c                                    :+:      :+:    :+:   */
+/*   init_data.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/29 10:52:26 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/19 16:04:56 by hyun-zhe         ###   ########.fr       */
+/*   Created: 2022/03/29 10:37:55 by nfernand          #+#    #+#             */
+/*   Updated: 2022/04/27 14:25:19 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_param	*new_param(char *param_str, param param_type, redirection redirection_type)
+void	init_env(t_data *data)
 {
-	t_param	*params;
-	
-	params = malloc(sizeof(t_param));
-	params->param_str = param_str;
-	params->param_type = param_type;
-	params->redirection_type = redirection_type;
-	params->next = NULL;
-	return (params);
-}
+	int		i;
+	char	*key;
+	char	*value;
+	t_envp	*head;
 
-t_cmd	*new_cmd(void)
-{
-	t_cmd	*cmds;
-
-	cmds = malloc(sizeof(t_cmd));
-	cmds->params = NULL;
-	cmds->next = NULL;
-	cmds->param_count = 0;
-	cmds->arg_count = 0;
-	cmds->option_count = 0;
-	cmds->input_fd = 0;
-	cmds->output_fd = 1;
-	return (cmds);
+	i = 0;
+	head = NULL;
+	while (data->envp[i])
+	{
+		value = ft_strdup(ft_strchr(data->envp[i], '=') + 1);
+		key = ft_substr(data->envp[i], 0, ft_strlen(data->envp[i]) - ft_strlen(value) - 1);
+		env_lstadd_back(&head, env_lstnew(key, value));
+		i++;
+	}
+	data->mini_envp = head;
 }
 
 t_data	*new_data(char **envp)
@@ -51,5 +43,13 @@ t_data	*new_data(char **envp)
 	tcgetattr(0, &original_term);
 	data->original_term = original_term;
 	data->exit_status = 0;
+	init_env(data);
 	return (data);
 }
+
+void	free_data(t_data *data)
+{
+	cmd_lstclear(&(data->cmds));
+	env_lstclear(&(data->mini_envp));
+}
+
