@@ -6,13 +6,13 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 09:26:31 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/26 11:30:02 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/27 10:34:10 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_strisnum(char *str)
+static int	ft_strisnum(char *str)
 {
 	int	i;
 
@@ -30,18 +30,12 @@ int	ft_strisnum(char *str)
 	return (1);
 }
 
-void	ft_exit(t_data *data, int exit_num)
-{
-	tcsetattr(0, 0, &data->original_term);
-	exit(exit_num);
-}
-
 void	mini_exit(t_data *data, t_cmd *cmd)
 {
 	t_param	*params;
 
 	params = cmd->params;
-	// printf("exit\n");
+	printf("exit\n");
 	if ((cmd->arg_count + cmd->option_count) == 0)
 		ft_exit(data, data->exit_status);
 	else if ((cmd->arg_count + cmd->option_count) > 1)

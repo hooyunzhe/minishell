@@ -167,29 +167,44 @@ void	env_lstadd_back(t_envp **lst, t_envp *new);
 void	env_lstdelnext(t_envp *head);
 void	env_lstdel(t_envp **head, t_envp *to_del);
 
-// ---------- get env functions ------------
+// ---------- builtin functions ------------
 
-void	mini_env(t_data *data);
-char	*mini_getenv(t_data *data, char *key);
 void	mini_export(t_data *data, t_cmd *cmd);
 void	mini_unset(t_data *data, t_cmd *cmd);
-
-//----------- directory functions ---------
-
+void	mini_echo(t_param *param);
+void	mini_env(t_data *data);
+void	mini_exit(t_data *data, t_cmd *cmd);
 void	mini_pwd(void);
-void	mini_chdir(t_data *data, t_cmd *cmd);
+void	mini_cd(t_data *data, t_cmd *cmd);
+void	mini_pwd(void);
+
+char	*mini_getenv(t_data *data, char *key);
 
 //----------- signal functions -------------
 
 void	read_signals();
 
-//----------- builtin functions -------------
-
-void	mini_echo(t_param *param);
-void	mini_exit(t_data *data, t_cmd *cmd);
-
 //----------- execute functions -------------
 
 void	executor(t_data *data);
+
+
+// ---------- builtin utils ------------
+
+// export and unset utils --------------
+
+int		check_valid_key(char *key);
+
+// cd utils -----------------------------
+
+char	*replace_str(char *str, char *s1, char *s2);
+void	update_env_pwd(t_data *data);
+char	*find_string(t_param *param, int count);
+int		handle_replaced_path(t_data *data, t_cmd *cmd, char **path);
+
+//----------- minishell utils -------------
+
+void	ft_exit(t_data *data, int exit_num);
+
 
 #endif

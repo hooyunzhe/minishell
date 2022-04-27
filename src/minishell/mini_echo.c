@@ -6,13 +6,13 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 15:36:26 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/22 15:53:15 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/27 09:54:04 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		strncmpn(char *str, char c)
+static int	strncmpn(char *str, char c)
 {
 	int	i;
 
@@ -26,7 +26,7 @@ int		strncmpn(char *str, char c)
 	return (0);
 }
 
-void	print_echo(char *str, int type)
+static void	print_echo(char *str, int type)
 {
 	if (type == 0)
 		printf("%s", str);
@@ -45,7 +45,6 @@ void	mini_echo(t_param *param)
 	chain_n = 0;
 	while (node)
 	{
-		// printf("[%s]\n", node->param_str);
 		if (node->param_type == OPTION)
 		{
 			if (!strncmpn(node->param_str + 1, 'n') && chain_n == 0)
@@ -57,10 +56,7 @@ void	mini_echo(t_param *param)
 			}
 		}
 		if (node->param_type == ARGUMENT)
-		{
-			// printf("[%s]\n", node->param_str);
 			print_echo(node->param_str, node->next != NULL);
-		}
 		node = node->next;
 	}
 	if (has_option == 0)

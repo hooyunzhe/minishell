@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   directory.c                                        :+:      :+:    :+:   */
+/*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/06 17:22:14 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/21 16:16:58 by hyun-zhe         ###   ########.fr       */
+/*   Created: 2022/04/27 10:05:43 by hyun-zhe          #+#    #+#             */
+/*   Updated: 2022/04/27 10:26:47 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*replace_str(char *str, char *s1, char *s2)
+char	*replace_str(char *str, char *s1, char *s2)
 {
 	int		i;
 	int		j;
@@ -41,9 +41,9 @@ static char	*replace_str(char *str, char *s1, char *s2)
 	return (res);
 }
 
-static void	update_env_pwd(t_data *data)
+void	update_env_pwd(t_data *data)
 {
-	char	buff[200];
+	char	*buff;
 	char	*oldpath;
 	t_envp	*node;
 
@@ -53,9 +53,10 @@ static void	update_env_pwd(t_data *data)
 	{
 		if (!ft_strncmp("PWD", node->key, 3))
 		{
-			getcwd(buff, 200);
+			buff = getcwd(NULL, 0);
 			free(node->value);
 			node->value = ft_strdup(buff);
+			free(buff);
 		}
 		if (!ft_strncmp("OLDPWD", node->key, 6))
 		{
@@ -66,7 +67,7 @@ static void	update_env_pwd(t_data *data)
 	}
 }
 
-static char	*find_string(t_param *param, int count)
+char	*find_string(t_param *param, int count)
 {
 	int	i;
 
@@ -84,7 +85,7 @@ static char	*find_string(t_param *param, int count)
 	return (NULL);
 }
 
-static int	handle_replaced_path(t_data *data, t_cmd *cmd, char **path)
+int	handle_replaced_path(t_data *data, t_cmd *cmd, char **path)
 {
 	char	*old;
 	char	*new;
@@ -102,44 +103,18 @@ static int	handle_replaced_path(t_data *data, t_cmd *cmd, char **path)
 	return (0);
 }	
 
-void	mini_chdir(t_data *data, t_cmd *cmd)
+int	check_valid_key(char *key)
 {
-	char	*path;
-	char	*param_path;
+	int	i;
 
-	if ((cmd->option_count + cmd->arg_count) > 2)
-		return (handle_error(data, CD_TOOMANY, NULL));
-	else if ((cmd->option_count + cmd->arg_count) == 2)
+	i = 0;
+	if (!key || ft_isdigit(key[i]) || key[i] == '=')
+		return (0);
+	while (key[i] && key[i] != '=')
 	{
-		if (handle_replaced_path(data, cmd, &path) == 1)
-			return ;
+		if (!ft_isalnum(key[i]) && key[i] != '_')
+			return (0);
+		i++;
 	}
-	else if ((cmd->option_count + cmd->arg_count) == 1)
-	{
-		param_path = find_string(cmd->params, 0);
-		if (!ft_strncmp(param_path, "-", 2))
-			path = mini_getenv(data, "OLDPWD");
-		else
-			path = param_path;
-	}
-	else
-		path = mini_getenv(data, "HOME");
-	if (chdir(path) == -1)
-	{
-		if (errno == ENOTDIR)
-			handle_error(data, CD_NOTADIR, path);
-		else if (errno == EACCES)
-			handle_error(data, CD_NOACCESS, path);
-		else
-			handle_error(data, CD_NODIR, path);
-	}
-	else
-		update_env_pwd(data);
-}
-
-void	mini_pwd(void)
-{
-	char	buff[200];
-
-	printf("%s\n", getcwd(buff, 200));
+	return (1);
 }

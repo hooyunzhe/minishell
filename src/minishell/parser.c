@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/25 18:27:08 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/26 14:16:50 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ char	check_pipe_err(char *str)
 			{
 				if (!has_arg)
 					break;
-				else
+				else if (str[i] == '|')
 					has_arg = 0;
 			}
 			if (str[i] != '|' && str[i] != ' ' && str[i] != '<' && str[i] != '>')
@@ -344,7 +344,7 @@ param	get_param_type(char *param_str)
 	if ((param_str[i] == '\'' || param_str[i] == '\"')
 		&& param_str[i + 1] == '-')
 		i++;
-	if (param_str[i] == '-' && param_str[i + 1])
+	if (param_str[i] == '-' && param_str[i + 1] && param_str[i + 1] != '-')
 		return (OPTION);
 	else if (!ft_strncmp(param_str, "<", ft_strlen(param_str))
 		|| !ft_strncmp(param_str, ">", ft_strlen(param_str))
@@ -414,7 +414,7 @@ int	check_redirection_start(char *str)
 
 int		has_expand(char *line)
 {
-	if (ft_strchr(line, '?') || ft_strchr(line, '~') || ft_strchr(line, '$'))
+	if (ft_strchr(line, '?') || ft_strchr(line, '~') || (ft_strchr(line, '$') && ft_strlen(line) > 1))
 		return (1);
 	return (0);
 }

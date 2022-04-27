@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/26 10:37:02 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/27 10:15:40 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	execute_builtin(t_data *data, t_cmd *cmd, builtin_cmd type)
 	if (type == MINI_ECHO)
 		mini_echo(cmd->params);
 	else if (type == MINI_CD)
-		mini_chdir(data, cmd);
+		mini_cd(data, cmd);
 	else if (type == MINI_PWD)
 		mini_pwd();
 	else if (type == MINI_EXPORT)
