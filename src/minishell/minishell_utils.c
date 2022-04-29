@@ -6,11 +6,21 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:33:50 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 11:55:13 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/29 15:49:50 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_freestrs(char **strs)
+{
+	int	i;
+
+	i = 0;
+	while (strs[i])
+		free(strs[i++]);
+	free(strs);
+}
 
 void	ft_exit(t_data *data, int exit_num)
 {

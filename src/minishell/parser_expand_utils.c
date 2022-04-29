@@ -6,11 +6,18 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 16:20:08 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 16:24:09 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/29 15:36:06 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	has_expand(char *line)
+{
+	if (ft_strchr(line, '?') || ft_strchr(line, '~') || (ft_strchr(line, '$') && ft_strlen(line) > 1))
+		return (1);
+	return (0);
+}
 
 static int	is_valid_var(char c)
 {

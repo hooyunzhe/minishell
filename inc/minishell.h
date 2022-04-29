@@ -137,6 +137,12 @@ void		count_args(t_cmd *cmd);
 
 // ---------- parser functions ---------------
 
+// utils -----------------------------
+
+char	**get_cmd_strs(char *line);
+int		get_cmd_count(char *line);
+int		check_redirection_start(char *str);
+
 // check -----------------------------
 
 char	check_input(char *str);
@@ -154,6 +160,12 @@ redirection	get_redirection_type(char *param_str, param param_type);
 char	*get_expanded_param(t_data *data, char *line, int len);
 char	*get_envvar(char *line, int index);
 int		get_expanded_len(t_data *data, char *line);
+int		has_expand(char *line);
+
+// unquotation -----------------------------
+
+int		get_unquoted_len(char *line);
+char	*get_unquoted_param(char *line);
 
 // ---------- command linked list functions ---------
 
@@ -216,6 +228,7 @@ int		handle_replaced_path(t_data *data, t_cmd *cmd, char **path);
 
 //----------- minishell utils -------------
 
+void	ft_freestrs(char **strs);
 void	ft_exit(t_data *data, int exit_num);
 
 
