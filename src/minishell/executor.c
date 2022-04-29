@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 16:29:17 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/29 16:50:47 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,10 +263,11 @@ void	single_executor(t_data *data, t_cmd *cmd)
 		if (pid == 0)
 			execute_command(data, cmd, param_lstfind(cmd->params, COMMAND, 0));
 		waitpid(pid, &status, 0);
-		// printf("Exited with code %d\n", WEXITSTATUS(status));
 		data->exit_status = WEXITSTATUS(status);
 	}
 	swap_old_fd(&old_stdin, &old_stdout, 1);
+	env_lstupdate(data->mini_envp, "_", 
+			ft_strdup(param_lstlast(cmd->params)->param_str));
 }
 
 void	multiple_executor(t_data *data, t_cmd *cmd)
@@ -280,6 +281,8 @@ void	multiple_executor(t_data *data, t_cmd *cmd)
 	i = 0;
 	while (cmd)
 	{
+		env_lstupdate(data->mini_envp, "_",
+			ft_strdup(param_lstlast(cmd->params)->param_str));
 		if (i > 0)
 			cmd->input_fd = pipes[0];
 		if (cmd->next)
@@ -307,7 +310,6 @@ void	multiple_executor(t_data *data, t_cmd *cmd)
 		waitpid(-1, &status, 0);
 		close(pipes[1]);
 		data->exit_status = WEXITSTATUS(status);
-		// printf("Exited with code %d\n", WEXITSTATUS(status));
 		i++;
 		cmd = cmd->next;
 	}

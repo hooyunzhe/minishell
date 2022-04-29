@@ -6,11 +6,29 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 10:37:55 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/27 14:25:19 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/04/29 16:23:26 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*set_envspecial(char *key, char *value)
+{
+	char	*temp;
+
+	if (!ft_strncmp(key, "SHLVL", 6))
+	{
+		temp = ft_itoa(ft_atoi(value) + 1);
+		free(value);
+		value = temp;
+	}
+	else if (!ft_strncmp(key, "_", 2))
+	{
+		free(value);
+		value = ft_strdup("./minishell");
+	}
+	return (value);
+}
 
 void	init_env(t_data *data)
 {
@@ -25,6 +43,7 @@ void	init_env(t_data *data)
 	{
 		value = ft_strdup(ft_strchr(data->envp[i], '=') + 1);
 		key = ft_substr(data->envp[i], 0, ft_strlen(data->envp[i]) - ft_strlen(value) - 1);
+		value = set_envspecial(key, value);
 		env_lstadd_back(&head, env_lstnew(key, value));
 		i++;
 	}

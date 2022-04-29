@@ -32,8 +32,8 @@ $(LIBFT):
 	@make -C ${LIBFT_DIR}
 
 ${NAME}:	${LIBFT} ${OBJ_FILES}
-	@${GCC} -o ${NAME} ${OBJ_FILES} $(LIBRARIES) $(CFLAGS)
-	#@${GCC} -o ${NAME} ${OBJ_FILES} $(LIBRARIES) $(SANITIZE) $(CFLAGS)
+	#@${GCC} -o ${NAME} ${OBJ_FILES} $(LIBRARIES) $(CFLAGS)
+	@${GCC} -o ${NAME} ${OBJ_FILES} $(LIBRARIES) $(SANITIZE) $(CFLAGS)
 
 test: re
 	@./$(NAME) 
