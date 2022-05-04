@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyun-zhe <hyun-zhe@student.42kl.edu.m      +#+  +:+       +#+        */
+/*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 18:13:28 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/14 11:59:31 by nazrinsha        ###   ########.fr       */
+/*   Updated: 2022/05/04 15:23:30 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-#include <stdio.h>
 char	*ft_strchr(const char *s, int c)
 {
 	if (!s)

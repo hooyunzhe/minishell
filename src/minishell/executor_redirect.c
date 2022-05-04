@@ -6,20 +6,20 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 15:06:59 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/04 15:22:01 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:26:56 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	handle_heredoc(t_data * data, char *delim)
+static int	handle_heredoc(t_data *data, char *delim)
 {
 	int		pipes[2];
 	char	*line;
 
 	pipe(pipes);
 	// read_signals(data, 1);
-	line = readline("heredoc > ");		
+	line = readline("heredoc > ");
 	while (line && ft_strncmp(line, delim, ft_strlen(delim) + 1))
 	{
 		line = get_expanded_param(data, line, ft_strlen(line));
@@ -57,9 +57,11 @@ static void	handle_io(t_data *data, t_cmd *cmd, t_param *params)
 	else if (params->redirection_type == D_IN)
 		cmd->input_fd = handle_heredoc(data, params->next->param_str);
 	else if (params->redirection_type == S_OUT)
-		cmd->output_fd = open(params->next->param_str, O_WRONLY | O_CREAT, 0644);
+		cmd->output_fd = open(params->next->param_str,
+				O_WRONLY | O_CREAT, 0644);
 	else if (params->redirection_type == D_OUT)
-		cmd->output_fd = open(params->next->param_str, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		cmd->output_fd = open(params->next->param_str,
+				O_WRONLY | O_CREAT | O_APPEND, 0644);
 }
 
 int	handle_redirections(t_data *data, t_cmd *cmd, t_param *params)
@@ -73,7 +75,7 @@ int	handle_redirections(t_data *data, t_cmd *cmd, t_param *params)
 				if (cmd->input_fd && params->redirection_type == S_IN)
 					close(cmd->input_fd);
 				if (cmd->output_fd != 1 && (params->redirection_type == S_OUT
-					|| params->redirection_type == D_OUT))
+						|| params->redirection_type == D_OUT))
 					close(cmd->output_fd);
 				handle_io(data, cmd, params);
 				if (cmd->input_fd == -1 || cmd->output_fd == -1)

@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 14:43:18 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/29 15:43:18 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:32:35 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ int	check_redirection_start(char *str)
 	return (0);
 }
 
-int		get_cmd_count(char *line)
+int	get_cmd_count(char *line)
 {
-	int	i;
-	int	len;
+	int		i;
+	int		len;
 	enclose	enclose_type;
 
 	i = 0;
@@ -37,7 +37,7 @@ int		get_cmd_count(char *line)
 	{
 		enclose_type = get_enclose_type(enclose_type, line[i]);
 		if (((enclose_type == CLOSED || enclose_type == NORMAL)
-			&& line[i] == '|') || !line[i + 1])
+				&& line[i] == '|') || !line[i + 1])
 			len++;
 		i++;
 	}
@@ -52,23 +52,22 @@ char	**get_cmd_strs(char *line)
 	enclose	enclose_type;
 	char	**cmd_strs;
 
-	i = 0;
+	i = -1;
 	j = 0;
 	len = 0;
 	enclose_type = CLOSED;
 	cmd_strs = malloc((get_cmd_count(line) + 1) * sizeof(char *));
-	while (line[i])
+	while (line[++i])
 	{
 		enclose_type = get_enclose_type(enclose_type, line[i]);
 		if (((enclose_type == CLOSED || enclose_type == NORMAL)
-			&& line[i] == '|') || !line[i + 1])
+				&& line[i] == '|') || !line[i + 1])
 		{
 			cmd_strs[j++] = ft_substr(line, i - len, len + (!line[i + 1]));
 			len = 0;
 		}
 		else
 			len++;
-		i++;
 	}
 	cmd_strs[j] = NULL;
 	return (cmd_strs);

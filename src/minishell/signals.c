@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 11:34:52 by nfernand          #+#    #+#             */
-/*   Updated: 2022/05/04 12:37:03 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:35:53 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ void	read_signals(t_data *data, int test)
 {
 	t_term	new_term;
 
-	//atexit(reset_the_terminal); //change this later illegal funcitno ujst reset the terminal normall on exit
 	new_term = data->original_term;
 	new_term.c_lflag &= ~ECHOCTL;
 	tcsetattr(0, 0, &new_term);

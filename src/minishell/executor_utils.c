@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 15:11:55 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/04 15:16:57 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:27:52 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*ft_strtolower(char *str)
 {
-	int 	i;
+	int		i;
 	char	*res;
 
 	i = -1;
@@ -41,14 +41,14 @@ int	ft_strncasecmp(char *s1, char *s2, int n)
 
 char	**get_param_array(t_cmd *cmd)
 {
-	char 	**res;
+	char	**res;
 	t_param	*node;
 	int		i;
 
 	i = 0;
 	res = malloc(sizeof(char *) * (cmd->arg_count + 2));
 	node = cmd->params;
-	while(node)
+	while (node)
 	{
 		if (node->param_type != REDIRECTION && node->param_type != IO_FILE)
 			res[i++] = ft_strdup(node->param_str);

@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/04 15:17:20 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:34:50 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	execute_command(t_data *data, t_cmd *cmd, t_param *command_str)
 {
-	int		i;
 	char	**params;
 	char	**paths;
 	char	**envp;
@@ -28,13 +27,13 @@ void	execute_command(t_data *data, t_cmd *cmd, t_param *command_str)
 		paths = NULL;
 	envp = env_lst_to_arr(data->mini_envp);
 	execve(params[0], params, envp);
-	i = 0;
-	while (paths && paths[i])
+	while (paths)
 	{
-		temp = ft_strjoin(paths[i], "/");
+		temp = ft_strjoin(*paths, "/");
 		fullpath = ft_strjoin(temp, command_str->param_str);
+		free(temp);
 		execve(fullpath, params, envp);
-		i++;
+		paths++;
 	}
 	handle_error(data, EXE_NOCMD, command_str->param_str);
 	ft_exit(data, 127);
@@ -47,7 +46,6 @@ void	single_executor(t_data *data, t_cmd *cmd)
 	int			status;
 	builtin_cmd	type;
 	pid_t		pid;
-
 
 	if (handle_redirections(data, cmd, cmd->params) == 1)
 		return ;
@@ -65,8 +63,8 @@ void	single_executor(t_data *data, t_cmd *cmd)
 		data->exit_status = WEXITSTATUS(status);
 	}
 	swap_old_fd(&old_stdin, &old_stdout, 1);
-	env_lstupdate(data->mini_envp, "_", 
-			ft_strdup(param_lstlast(cmd->params)->param_str));
+	env_lstupdate(data->mini_envp, "_",
+		ft_strdup(param_lstlast(cmd->params)->param_str));
 }
 
 void	multiple_executor_child(t_data *data, t_cmd *cmd)

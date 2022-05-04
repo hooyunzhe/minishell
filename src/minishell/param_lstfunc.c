@@ -6,16 +6,18 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 11:33:08 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 14:23:55 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:32:08 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_param	*param_lstnew(char *param_str, param param_type, redirection redirection_type)
+t_param	*param_lstnew(char *param_str,
+					param param_type,
+					redirection redirection_type)
 {
 	t_param	*params;
-	
+
 	params = malloc(sizeof(t_param));
 	params->param_str = param_str;
 	params->param_type = param_type;

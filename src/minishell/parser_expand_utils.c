@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 16:20:08 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/29 15:36:06 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:30:07 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 int	has_expand(char *line)
 {
-	if (ft_strchr(line, '?') || ft_strchr(line, '~') || (ft_strchr(line, '$') && ft_strlen(line) > 1))
+	if (ft_strchr(line, '?') || ft_strchr(line, '~')
+		|| (ft_strchr(line, '$') && ft_strlen(line) > 1))
 		return (1);
 	return (0);
 }

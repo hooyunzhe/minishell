@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 14:19:15 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 14:20:12 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:24:20 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_envp	*env_lstfind(t_envp *lst, char *key)
 	return (NULL);
 }
 
-int		env_lst_getlen(t_envp *envp)
+int	env_lst_getlen(t_envp *envp)
 {
 	int	count;
 

@@ -6,13 +6,13 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 15:14:48 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/04 15:15:17 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:35:27 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-builtin_cmd		check_builtin(t_param *param)
+builtin_cmd	check_builtin(t_param *param)
 {
 	t_param	*command;
 

@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 14:20:37 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 14:21:49 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:23:41 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	cmd_lstadd_back(t_cmd **cmd, t_cmd *new_cmd)
 void	cmd_lstclear(t_cmd **cmds)
 {
 	t_cmd	*temp;
-	
+
 	while (*cmds != NULL)
 	{
 		temp = (*cmds)->next;
