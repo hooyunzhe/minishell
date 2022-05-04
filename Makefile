@@ -9,7 +9,8 @@ SRC_FILES	= main.c minishell.c parser.c env_lstfunc.c env_lstutils.c mini_unset.
 			  param_lstfunc.c param_lstutils.c cmd_lstfunc.c signals.c mini_echo.c\
 			  handle_error.c executor.c mini_exit.c mini_env.c mini_export.c builtin_utils.c\
 			  mini_pwd.c mini_cd.c minishell_utils.c init_data.c parser_utils.c parser_check.c\
-			  parser_expand.c parser_expand_utils.c parser_type.c parser_unquote.c
+			  parser_expand.c parser_expand_utils.c parser_type.c parser_unquote.c\
+			  executor_redirect.c executor_fd.c executor_builtin.c executor_utils.c\
 
 OBJ_FILES	= ${addprefix ${OBJ_DIR}/, ${SRC_FILES:.c=.o}}
 

@@ -6,47 +6,58 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 15:56:13 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/26 11:26:27 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/04 14:17:52 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// change dprintf to std_err
+void	ft_write_err(char *err_msg, char *param, int type)
+{
+	ft_putstr_fd(err_msg, 2);
+	if (type == 1)
+		ft_putchar_fd('[', 2);
+	if (param)
+		ft_putstr_fd(param, 2);
+	if (type == 1)
+		ft_putchar_fd(']', 2);
+	ft_putstr_fd("\n", 2);
+}
 
 void	handle_exe_error(t_data *data, error_id id, char *param)
 {
 	if (id == EXE_NOCMD)
 	{
-		dprintf(2, "minishell: command not found: %s\n", param);
+		// dprintf(2, "minishell: command not found: %s\n", param);
+		ft_write_err("minishell: command not found: ", param, 0);
 		data->exit_status = 127;
 	}
 	else if (id == EXE_NOFILE)
-		dprintf(2, "minishell: no such file or directory: %s\n", param);
+		ft_write_err("minishell: no such file or directory: ", param, 0);
 	else if (id == EXE_NOPERM)
-		dprintf(2, "minishell: permission denied: %s\n", param);
+		ft_write_err("minishell: permission denied: ", param, 0);
 }
 
 void	handle_cd_error(error_id id, char *param)
 {
 	if (id == CD_NODIR)
-		dprintf(2, "cd: no such file or directory: %s\n", param);
+		ft_write_err("cd: no such file or directory: ", param, 0);
 	else if (id == CD_TOOMANY)
-		dprintf(2, "cd: too many arguments\n");
+		ft_write_err("cd: too many arguments", NULL, 0);
 	else if (id == CD_STRNOTIN)
-		dprintf(2, "cd: string not in pwd: %s\n", param);
+		ft_write_err("cd: string not in pwd: ", param, 0);
 	else if (id == CD_NOTADIR)
-		dprintf(2, "cd: not a directory: %s\n", param);
+		ft_write_err("cd: not a directory: ", param, 0);
 	else if (id == CD_NOACCESS)
-		dprintf(2, "cd: permission denied: %s\n", param);
+		ft_write_err("cd: permission denied: ", param, 0);
 }
 
 void	handle_exit_error(error_id id, char *param)
 {
 	if (id == EXIT_NONUM)
-		dprintf(2, "exit: numeric argument required: %s\n", param);
+		ft_write_err("exit: numeric argument required: ", param, 0);
 	else if (id == EXIT_TOOMANY)
-		dprintf(2, "exit: too many arguments\n");
+		ft_write_err("exit: too many arguments", NULL, 0);
 }
 
 void	handle_error(t_data *data, error_id id, char *param)
@@ -55,16 +66,16 @@ void	handle_error(t_data *data, error_id id, char *param)
 	if (id <= PARSE_ERR)
 	{
 		data->exit_status = 2;
-		dprintf(2, "minishell: parse error near [%s]\n", param);
+		ft_write_err("minishell: parse error near ", param, 1);
 	}
 	else if (id <= EXE_NOPERM)
 		handle_exe_error(data, id, param);
 	else if (id <= CD_NOACCESS)
 		handle_cd_error(id, param);
 	else if (id == EXP_NOTVALID)
-		dprintf(2, "export: not a valid identifier: %s\n", param);
+		ft_write_err("export: not a valid identifier: ", param, 0);
 	else if (id == UNS_NOTVALID)
-		dprintf(2, "unset: not a valid identifier: %s\n", param);
+		ft_write_err("unset: not a valid identifier: ", param, 0);
 	else if (id <= EXIT_TOOMANY)
 		handle_exit_error(id, param);
 }

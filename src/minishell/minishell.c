@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:22:40 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 11:52:06 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/04 11:54:32 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	minishell(t_data *data)
 {
 	char	*line;
 
-	read_signals();
+	read_signals(data, 0);
 	line = readline("minishell % ");
 	while (line != NULL)
 	{

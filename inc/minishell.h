@@ -28,6 +28,8 @@
 # define CYAN		"\033[36m"
 # define WHITE		"\033[37m"
 
+int	signal_eof;
+
 typedef enum param
 {
 	COMMAND,
@@ -72,7 +74,8 @@ typedef enum error_id
 
 typedef enum builtin_cmd
 {
-	FAKE,
+	NO_CMD,
+	NON_BUILTIN,
 	MINI_ECHO,
 	MINI_CD,
 	MINI_PWD,
@@ -206,12 +209,29 @@ char	*mini_getenv(t_data *data, char *key);
 
 //----------- signal functions -------------
 
-void	read_signals();
+void	read_signals(t_data *data, int test);
 
 //----------- execute functions -------------
 
 void	executor(t_data *data);
+int		handle_redirections(t_data *data, t_cmd *cmd, t_param *params);
 
+// execute utils -----------------------
+
+char	*ft_strtolower(char *str);
+int		ft_strncasecmp(char *s1, char *s2, int n);
+char	**get_param_array(t_cmd *cmd);
+char	**env_lst_to_arr(t_envp *envp);
+
+// fd utils ----------------------------
+
+void	swap_old_fd(int *old_stdin, int *old_stdout, int type);
+void	swap_new_fd(t_cmd *cmd);
+
+// execute builtin ---------------------
+
+builtin_cmd	check_builtin(t_param *param);
+void		execute_builtin(t_data *data, t_cmd *cmd, builtin_cmd type);
 
 // ---------- builtin utils ------------
 

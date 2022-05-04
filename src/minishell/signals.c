@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 11:34:52 by nfernand          #+#    #+#             */
-/*   Updated: 2022/04/12 11:43:36 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/04 12:37:03 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,22 @@ static void	handle_signal(int num)
 	}
 }
 
-void	read_signals(t_data *data)
+static void	handle_signal_test(int num)
+{
+	if (num == SIGINT) // ctrl-c
+	{
+		signal_eof = 1;
+		write(1, "\n", 1);
+		rl_replace_line("\x0d", 1);
+	}
+	else if (num == SIGQUIT) //ctrl-/
+	{
+		write(1, "minishell % ", ft_strlen("minishell % "));
+		write(1, rl_line_buffer, ft_strlen(rl_line_buffer));
+	}
+}
+
+void	read_signals(t_data *data, int test)
 {
 	t_term	new_term;
 
@@ -36,6 +51,14 @@ void	read_signals(t_data *data)
 	new_term = data->original_term;
 	new_term.c_lflag &= ~ECHOCTL;
 	tcsetattr(0, 0, &new_term);
-	signal(SIGINT, handle_signal);
-	signal(SIGQUIT, handle_signal);
+	if (test == 0)
+	{
+		signal(SIGINT, handle_signal);
+		signal(SIGQUIT, handle_signal);
+	}
+	if (test == 1)
+	{
+		signal(SIGINT, handle_signal_test);
+		signal(SIGQUIT, handle_signal_test);
+	}
 }
