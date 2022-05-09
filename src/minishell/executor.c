@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/09 10:43:36 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 14:26:54 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,9 @@ void	single_executor(t_data *data, t_cmd *cmd)
 	int			old_stdin;
 	int			old_stdout;
 	int			status;
-	builtin_cmd	type;
+	t_cmdtype	type;
 	pid_t		pid;
 
-	if (handle_redirections(data, cmd, cmd->params) == 1)
-		return ;
 	swap_old_fd(&old_stdin, &old_stdout, 0);
 	swap_new_fd(cmd);
 	type = check_builtin(cmd->params);
@@ -69,7 +67,7 @@ void	single_executor(t_data *data, t_cmd *cmd)
 
 void	multiple_executor_child(t_data *data, t_cmd *cmd)
 {
-	builtin_cmd	type;
+	t_cmdtype	type;
 
 	type = check_builtin(cmd->params);
 	handle_redirections(data, cmd, cmd->params);
@@ -85,26 +83,22 @@ void	multiple_executor_child(t_data *data, t_cmd *cmd)
 
 void	multiple_executor(t_data *data, t_cmd *cmd)
 {
-	int			i;
 	int			status;
 	pid_t		pid;
 	int			pipes[2];
 
-	i = -1;
 	while (cmd)
 	{
 		env_lstupdate(data->mini_envp, "_",
 			ft_strdup(param_lstlast(cmd->params)->param_str));
-		if (++i > 0)
+		if (cmd != data->cmds)
 			cmd->input_fd = pipes[0];
 		pipe(pipes);
 		pid = fork();
+		if ((pid == 0 && cmd->next != NULL))
+			cmd->output_fd = pipes[1];
 		if (pid == 0)
-		{
-			if (i < data->cmd_count - 1)
-				cmd->output_fd = pipes[1];
 			multiple_executor_child(data, cmd);
-		}
 		close(pipes[1]);
 		if (param_lstfind(cmd->params, REDIRECTION, 0) != NULL)
 			waitpid(-1, &status, 0);
@@ -120,7 +114,10 @@ void	executor(t_data *data)
 	if (data->cmds && data->cmds->params->param_str)
 	{
 		if (data->cmd_count == 1)
-			single_executor(data, data->cmds);
+		{
+			if (handle_redirections(data, data->cmds, data->cmds->params) != 1)
+				single_executor(data, data->cmds);
+		}
 		else
 			multiple_executor(data, data->cmds);
 	}

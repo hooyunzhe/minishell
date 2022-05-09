@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 10:37:55 by nfernand          #+#    #+#             */
-/*   Updated: 2022/05/04 15:28:25 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 11:24:27 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*set_envspecial(char *key, char *value)
 	return (value);
 }
 
-void	init_env(t_data *data)
+static void	init_env(t_data *data)
 {
 	int		i;
 	char	*key;

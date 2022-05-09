@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 14:43:18 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/04 15:32:35 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 13:42:03 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ int	check_redirection_start(char *str)
 
 int	get_cmd_count(char *line)
 {
-	int		i;
-	int		len;
-	enclose	enclose_type;
+	int				i;
+	int				len;
+	t_enclosetype	enclose_type;
 
 	i = 0;
 	len = 0;
@@ -46,11 +46,11 @@ int	get_cmd_count(char *line)
 
 char	**get_cmd_strs(char *line)
 {
-	int		i;
-	int		j;
-	int		len;
-	enclose	enclose_type;
-	char	**cmd_strs;
+	int				i;
+	int				j;
+	int				len;
+	t_enclosetype	enclose_type;
+	char			**cmd_strs;
 
 	i = -1;
 	j = 0;

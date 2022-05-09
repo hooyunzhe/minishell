@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 16:37:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/29 16:05:27 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 13:39:54 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ char	*get_modified_param(t_data *data, t_cmd *cmd, char *param_str)
 
 void	get_param(t_data *data, t_cmd *cmd, char *param_str)
 {
-	param		param_type;
-	redirection	redirection_type;
-	char		*modified_param;
-	t_param		*current_param;
+	t_paramtype			param_type;
+	t_redirectiontype	redirection_type;
+	char				*modified_param;
+	t_param				*current_param;
 
 	modified_param = get_modified_param(data, cmd, param_str);
 	param_type = get_param_type(modified_param);
@@ -57,10 +57,10 @@ void	get_param(t_data *data, t_cmd *cmd, char *param_str)
 
 t_cmd	*get_cmd(t_data *data, char *line)
 {
-	int		i;
-	int		len;
-	enclose	et;
-	t_cmd	*cmd;
+	int				i;
+	int				len;
+	t_enclosetype	et;
+	t_cmd			*cmd;
 
 	i = -1;
 	len = 0;

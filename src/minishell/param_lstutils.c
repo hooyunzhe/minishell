@@ -6,13 +6,13 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 14:22:56 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 14:23:11 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 13:36:56 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_param	*param_lstfind(t_param *node, param type, int index)
+t_param	*param_lstfind(t_param *node, t_paramtype type, int index)
 {
 	while (node)
 	{

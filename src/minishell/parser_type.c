@@ -6,20 +6,20 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 14:48:25 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 16:33:53 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 14:40:01 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-enclose	is_closed(enclose enclose_type, char current_char)
+t_enclosetype	is_closed(t_enclosetype enclose_type, char current_char)
 {
 	return ((enclose_type == 1 && current_char == '\'')
 		|| (enclose_type == 2 && current_char == '\"')
 		|| (enclose_type == 3 && (current_char == ' ')));
 }
 
-enclose	get_enclose_type(enclose enclose_type, char current_char)
+t_enclosetype	get_enclose_type(t_enclosetype enclose_type, char current_char)
 {
 	if (enclose_type == CLOSED || enclose_type == NORMAL)
 	{
@@ -35,7 +35,7 @@ enclose	get_enclose_type(enclose enclose_type, char current_char)
 	return (enclose_type);
 }
 
-param	get_param_type(char *param_str)
+t_paramtype	get_param_type(char *param_str)
 {
 	int	i;
 
@@ -81,7 +81,8 @@ void	update_param_type(t_param *params)
 	}
 }
 
-redirection	get_redirection_type(char *param_str, param param_type)
+t_redirectiontype	get_redirection_type(char *param_str,
+						t_paramtype param_type)
 {
 	if (param_type == REDIRECTION)
 	{

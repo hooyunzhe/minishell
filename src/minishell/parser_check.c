@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 14:34:21 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 16:33:16 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 13:42:39 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ static char	check_unclosed_err(char *str)
 
 static char	check_pipe_err(char *str)
 {
-	int		i;
-	int		has_arg;
-	enclose	enclose_type;
+	int				i;
+	int				has_arg;
+	t_enclosetype	enclose_type;
 
 	i = 0;
 	has_arg = 0;
@@ -71,9 +71,9 @@ static char	check_pipe_err(char *str)
 
 static char	check_redirection_err(char *str)
 {
-	int		i;
-	int		has_arrow;
-	enclose	enclose_type;
+	int				i;
+	int				has_arrow;
+	t_enclosetype	enclose_type;
 
 	i = -1;
 	has_arrow = 0;

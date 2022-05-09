@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 15:45:04 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/29 15:45:11 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 13:44:11 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	get_unquoted_len(char *line)
 {
-	int		i;
-	int		count;
-	enclose	enclose_type;
+	int				i;
+	int				count;
+	t_enclosetype	enclose_type;
 
 	i = 0;
 	count = 0;
@@ -37,10 +37,10 @@ int	get_unquoted_len(char *line)
 
 char	*get_unquoted_param(char *line)
 {
-	int		i;
-	int		j;
-	enclose	enclose_type;
-	char	*unquoted_line;
+	int				i;
+	int				j;
+	t_enclosetype	enclose_type;
+	char			*unquoted_line;
 
 	i = 0;
 	j = 0;

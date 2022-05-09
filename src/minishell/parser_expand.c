@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 15:03:14 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 16:54:08 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 13:42:48 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ static char	*get_return_value(char *expanded_line)
 }
 
 char	*get_expanded_param(t_data *data, char *line, int len)
-{
-	int		index;
-	char	*expanded_line;
-	enclose	enclose_type;
+{		
+	int				index;
+	char			*expanded_line;
+	t_enclosetype	enclose_type;
 
 	expanded_line = malloc(get_expanded_len(data, line) * sizeof(char));
 	index = 0;

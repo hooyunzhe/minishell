@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyun-zhe <hyun-zhe@student.42kl.edu.m      +#+  +:+       +#+        */
+/*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:13:17 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2021/06/21 18:50:51 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 13:52:16 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@ static int	is_num(char c)
 
 int	ft_atoi(const char *str)
 {
-	size_t	longMax;
+	size_t	long_max;
 	size_t	num;
 	int		sign;
 
-	longMax = 9223372036854775807;
+	long_max = 9223372036854775807;
 	num = 0;
 	sign = 1;
 	while (is_space(*str))
@@ -43,7 +43,7 @@ int	ft_atoi(const char *str)
 	{
 		num *= 10;
 		num += *str++ - '0';
-		if (num > longMax)
+		if (num > long_max)
 			return (-1 + (sign == -1));
 	}
 	return (num * sign);

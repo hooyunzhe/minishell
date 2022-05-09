@@ -6,13 +6,13 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 15:14:48 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/04 15:35:27 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 14:26:50 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-builtin_cmd	check_builtin(t_param *param)
+t_cmdtype	check_builtin(t_param *param)
 {
 	t_param	*command;
 
@@ -36,8 +36,9 @@ builtin_cmd	check_builtin(t_param *param)
 	return (NON_BUILTIN);
 }
 
-void	execute_builtin(t_data *data, t_cmd *cmd, builtin_cmd type)
+void	execute_builtin(t_data *data, t_cmd *cmd, t_cmdtype type)
 {
+	data->exit_status = 0;
 	if (type == MINI_ECHO)
 		mini_echo(cmd->params);
 	else if (type == MINI_CD)
