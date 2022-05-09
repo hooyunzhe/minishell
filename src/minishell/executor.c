@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/09 14:26:54 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 15:38:17 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	execute_command(t_data *data, t_cmd *cmd, t_param *command_str)
 		paths = NULL;
 	envp = env_lst_to_arr(data->mini_envp);
 	execve(params[0], params, envp);
-	while (*paths)
+	while (paths && *paths)
 	{
 		temp = ft_strjoin(*paths, "/");
 		fullpath = ft_strjoin(temp, command_str->param_str);
