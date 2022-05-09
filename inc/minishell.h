@@ -28,7 +28,6 @@
 # define CYAN		"\033[36m"
 # define WHITE		"\033[37m"
 
-int	signal_eof;
 
 typedef enum param
 {
@@ -209,7 +208,7 @@ char	*mini_getenv(t_data *data, char *key);
 
 //----------- signal functions -------------
 
-void	read_signals(t_data *data, int test);
+void	read_signals(t_data *data);
 
 //----------- execute functions -------------
 

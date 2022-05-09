@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/04 15:34:50 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 10:43:36 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	execute_command(t_data *data, t_cmd *cmd, t_param *command_str)
 		paths = NULL;
 	envp = env_lst_to_arr(data->mini_envp);
 	execve(params[0], params, envp);
-	while (paths)
+	while (*paths)
 	{
 		temp = ft_strjoin(*paths, "/");
 		fullpath = ft_strjoin(temp, command_str->param_str);
@@ -105,11 +105,14 @@ void	multiple_executor(t_data *data, t_cmd *cmd)
 				cmd->output_fd = pipes[1];
 			multiple_executor_child(data, cmd);
 		}
-		waitpid(-1, &status, 0);
 		close(pipes[1]);
-		data->exit_status = WEXITSTATUS(status);
+		if (param_lstfind(cmd->params, REDIRECTION, 0) != NULL)
+			waitpid(-1, &status, 0);
 		cmd = cmd->next;
 	}
+	while (waitpid(-1, &status, 0) > 0)
+		;
+	data->exit_status = WEXITSTATUS(status);
 }
 
 void	executor(t_data *data)

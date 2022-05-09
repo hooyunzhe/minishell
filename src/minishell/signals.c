@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 11:34:52 by nfernand          #+#    #+#             */
-/*   Updated: 2022/05/04 15:35:53 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 10:53:43 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,36 +28,13 @@ static void	handle_signal(int num)
 	}
 }
 
-static void	handle_signal_test(int num)
-{
-	if (num == SIGINT) // ctrl-c
-	{
-		signal_eof = 1;
-		write(1, "\n", 1);
-		rl_replace_line("\x0d", 1);
-	}
-	else if (num == SIGQUIT) //ctrl-/
-	{
-		write(1, "minishell % ", ft_strlen("minishell % "));
-		write(1, rl_line_buffer, ft_strlen(rl_line_buffer));
-	}
-}
-
-void	read_signals(t_data *data, int test)
+void	read_signals(t_data *data)
 {
 	t_term	new_term;
 
 	new_term = data->original_term;
 	new_term.c_lflag &= ~ECHOCTL;
 	tcsetattr(0, 0, &new_term);
-	if (test == 0)
-	{
-		signal(SIGINT, handle_signal);
-		signal(SIGQUIT, handle_signal);
-	}
-	if (test == 1)
-	{
-		signal(SIGINT, handle_signal_test);
-		signal(SIGQUIT, handle_signal_test);
-	}
+	signal(SIGINT, handle_signal);
+	signal(SIGQUIT, handle_signal);
 }

@@ -27,6 +27,9 @@
 - echo "$USER"'$USER'
 - echo "'test' $USER "hello ' $USER"world"'test
 
+### pipes
+- Multiple redirection if there is an error with file oppening have to handle. Same for heredoc
+
 ### Quotes in env_vars
 
 - export sq="'"
@@ -59,13 +62,15 @@ echo ">>t"test
 - cd - (goes to OLDPWD)
 - cd no argument return to root
 - cd [check if file is file or directory](https://stackoverflow.com/questions/4553012/checking-if-a-file-is-a-directory-or-just-a-file)
-
-## To fix
 - cd test test2
 - cd -n test
 - cd -n -n
 - cd < test -n abc
 - cd < test ~
+
+### parsing: single character in the beginning
+< test.txt echo hello (valid)
+e test (invalid)
 
 ## To not fix
 
@@ -74,14 +79,8 @@ echo ">>t"test
 - echo $bad
 - echo "$bad"
 
-## To-do
-
-### parsing: single character in the beginning
-< test.txt echo hello (valid)
-e test (invalid)
-
-
-## To-do
-
-### pipes
-- Multiple redirection if there is an error with file oppening have to handle. Same for heredoc
+## To do
+- header
+- Makefile
+- styling
+- maybe signals in heredoc

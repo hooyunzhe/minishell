@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 15:06:59 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/04 15:26:56 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/09 10:50:43 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ static int	handle_heredoc(t_data *data, char *delim)
 	char	*line;
 
 	pipe(pipes);
-	// read_signals(data, 1);
 	line = readline("heredoc > ");
 	while (line && ft_strncmp(line, delim, ft_strlen(delim) + 1))
 	{
@@ -27,15 +26,7 @@ static int	handle_heredoc(t_data *data, char *delim)
 		write(pipes[1], "\n", 1);
 		free(line);
 		line = readline("heredoc > ");
-		// dprintf(2,"%d\n", signal_eof);
-		// if (signal_eof)
-		// {
-		// 	dprintf(2,"entered\n");
-		// 	break ;
-		// }
 	}
-	// signal_eof = 0;
-	// read_signals(data, 0);
 	free(line);
 	close(pipes[1]);
 	return (pipes[0]);
