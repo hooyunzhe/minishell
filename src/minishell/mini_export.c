@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 09:58:58 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 10:30:12 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/10 12:28:39 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,19 @@ static void	handle_args(t_data *data, t_envp *head, t_param *node)
 		if (node->param_type == ARGUMENT)
 		{
 			if (!check_valid_key(node->param_str))
-				return (handle_error(data, EXP_NOTVALID, node->param_str));
-			key = get_key(node->param_str);
-			if (ft_strlen(key) == ft_strlen(node->param_str)
-				|| ft_strlen(key) == ft_strlen(node->param_str) - 1)
-				value = ft_strdup("");
+				handle_error(data, EXP_NOTVALID, node->param_str);
 			else
 			{
-				value = ft_substr(node->param_str, ft_strlen(key) + 1,
-						ft_strlen(node->param_str) - ft_strlen(key));
+				key = get_key(node->param_str);
+				if (ft_strlen(key) == ft_strlen(node->param_str)
+					|| ft_strlen(key) == ft_strlen(node->param_str) - 1)
+					value = ft_strdup("");
+				else
+					value = ft_substr(node->param_str, ft_strlen(key) + 1,
+							ft_strlen(node->param_str) - ft_strlen(key));
+				if (!env_lstupdate(head, key, value))
+					env_lstadd_back(&head, env_lstnew(key, value));
 			}
-			if (!env_lstupdate(head, key, value))
-				env_lstadd_back(&head, env_lstnew(key, value));
 		}
 		node = node->next;
 	}
