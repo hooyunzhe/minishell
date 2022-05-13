@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 11:34:52 by nfernand          #+#    #+#             */
-/*   Updated: 2022/05/09 10:53:43 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/13 10:39:17 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	handle_signal(int num)
 	}
 	else if (num == SIGQUIT)
 	{
-		write(1, "minishell % ", ft_strlen("minishell % "));
+		write(1, "mini x hell % ", ft_strlen("mini x hell % "));
 		write(1, rl_line_buffer, ft_strlen(rl_line_buffer));
 	}
 }

@@ -12,7 +12,13 @@ SRC_FILES	= main.c minishell.c parser.c env_lstfunc.c env_lstutils.c mini_unset.
 			  parser_expand.c parser_expand_utils.c parser_type.c parser_unquote.c\
 			  executor_redirect.c executor_fd.c executor_builtin.c executor_utils.c\
 
+SRC_BANNER	= banner.c
+
+JNG_BANNER	= banner_jng.c
+
 OBJ_FILES	= ${addprefix ${OBJ_DIR}/, ${SRC_FILES:.c=.o}}
+OBJ_BANNER	= ${OBJ_DIR}/${SRC_BANNER:.c=.o}
+OBJ_JNGBAN	= ${OBJ_DIR}/${JNG_BANNER:.c=.o}
 
 GCC			= gcc
 CFLAGS		= -Wall -Wextra -Werror
@@ -32,20 +38,27 @@ $(OBJ_DIR)/%.o:		$(SRC_DIR)/%.c
 $(LIBFT):
 	@make -C ${LIBFT_DIR}
 
-${NAME}:	${LIBFT} ${OBJ_FILES}
-	#@${GCC} -o ${NAME} ${OBJ_FILES} $(LIBRARIES) $(CFLAGS)
-	@${GCC} -o ${NAME} ${OBJ_FILES} $(LIBRARIES) $(SANITIZE) $(CFLAGS)
+${NAME}:	${LIBFT} ${OBJ_FILES} ${OBJ_BANNER}
+	@${GCC} -o ${NAME} ${OBJ_FILES} ${OBJ_BANNER} $(LIBRARIES) $(CFLAGS)
+
+jng:	${LIBFT} ${OBJ_FILES} ${OBJ_JNGBAN}
+	@${GCC} -o ${NAME} ${OBJ_FILES} ${OBJ_JNGBAN} $(LIBRARIES) $(CFLAGS)
+	@./$(NAME) 
 
 test: re
 	@./$(NAME) 
 
 clean:
-	@${RM} ${OBJ_DIR}
+	@${RM} ${OBJ_DIR}/*
 	make clean -C ${LIBFT_DIR}
+
+sanitize:	fclean ${LIBFT} ${OBJ_FILES}
+	@${GCC} -o ${NAME} ${OBJ_FILES} $(LIBRARIES) $(SANITIZE) $(CFLAGS)
+	@./$(NAME)
 
 fclean:
 	@${RM} ${NAME}
-	@${RM} ${OBJ_FILES}
+	@${RM} ${OBJ_DIR}/*
 	@make fclean -C ${LIBFT_DIR}
 
 re:	fclean all

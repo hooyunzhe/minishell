@@ -24,6 +24,8 @@
 # define CYAN		"\033[36m"
 # define WHITE		"\033[37m"
 
+# define B_RED		"\e[1;91m"
+
 typedef enum e_paramtype
 {
 	COMMAND,
@@ -136,7 +138,8 @@ void				count_args(t_cmd *cmd);
 char				*mini_getenv(t_data *data, char *key);
 void				ft_freestrs(char **strs);
 void				ft_exit(t_data *data, int exit_num);
-void				print_header(void);
+void				print_intro(void);
+void				print_outro(void);
 
 // ---------- parser functions ---------------
 
