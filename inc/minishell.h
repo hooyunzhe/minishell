@@ -138,6 +138,7 @@ void				count_args(t_cmd *cmd);
 char				*mini_getenv(t_data *data, char *key);
 void				ft_freestrs(char **strs);
 void				ft_exit(t_data *data, int exit_num);
+void				ft_parent_exit(t_data *data, int exit_num);
 void				print_intro(void);
 void				print_outro(void);
 

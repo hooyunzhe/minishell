@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:22:40 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/13 10:39:09 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/13 12:24:12 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	minishell(t_data *data)
 	if (!line)
 	{
 		free(line);
-		ft_exit(data, 0);
+		ft_parent_exit(data, 0);
 	}
 	return (0);
 }
