@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:22:40 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/13 12:24:12 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/17 18:44:47 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int	minishell(t_data *data)
 	line = readline("mini x hell % ");
 	while (line != NULL)
 	{
+		signal(SIGINT, SIG_IGN);
 		parser(data, line);
 		count_args(data->cmds);
 		add_history(line);
@@ -47,6 +48,7 @@ int	minishell(t_data *data)
 		cmd_lstclear(&(data->cmds));
 		data->cmd_count = 0;
 		free(line);
+		read_signals(data);
 		line = readline("mini x hell % ");
 	}
 	if (!line)
