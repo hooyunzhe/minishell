@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/09 15:38:17 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/17 18:25:50 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,13 @@ void	single_executor(t_data *data, t_cmd *cmd)
 		execute_builtin(data, cmd, type);
 	else if (type != NO_CMD)
 	{
+		signal(SIGINT, SIG_IGN);
 		pid = fork();
 		if (pid == 0)
 			execute_command(data, cmd, param_lstfind(cmd->params, COMMAND, 0));
 		waitpid(pid, &status, 0);
 		data->exit_status = WEXITSTATUS(status);
+		read_signals(data);
 	}
 	swap_old_fd(&old_stdin, &old_stdout, 1);
 	env_lstupdate(data->mini_envp, "_",
