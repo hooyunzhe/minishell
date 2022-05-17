@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 09:58:58 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/10 12:28:39 by nazrinsha        ###   ########.fr       */
+/*   Updated: 2022/05/17 19:25:43 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,14 @@ static void	handle_noargs(t_envp *head)
 	}
 }
 
+static void	add_env(t_envp *head, char *key, char *value)
+{
+	if (env_lstupdate(head, key, value) == 1)
+		free(key);
+	else
+		env_lstadd_back(&head, env_lstnew(key, value));
+}
+
 static void	handle_args(t_data *data, t_envp *head, t_param *node)
 {
 	char	*key;
@@ -56,8 +64,7 @@ static void	handle_args(t_data *data, t_envp *head, t_param *node)
 				else
 					value = ft_substr(node->param_str, ft_strlen(key) + 1,
 							ft_strlen(node->param_str) - ft_strlen(key));
-				if (!env_lstupdate(head, key, value))
-					env_lstadd_back(&head, env_lstnew(key, value));
+				add_env(head, key, value);
 			}
 		}
 		node = node->next;

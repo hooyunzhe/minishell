@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/29 11:50:54 by nfernand          #+#    #+#             */
-/*   Updated: 2022/05/17 18:03:06 by nazrinsha        ###   ########.fr       */
+/*   Updated: 2022/05/17 19:26:56 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ int	env_lstupdate(t_envp *lst, char *key, char *value)
 	{
 		if (!ft_strncmp(lst->key, key, ft_strlen(key) + 1))
 		{
-			if (key && *key != '_')
-				free(key);
 			free(lst->value);
 			lst->value = value;
 			return (1);
