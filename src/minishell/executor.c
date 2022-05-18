@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/17 18:46:10 by nazrinsha        ###   ########.fr       */
+/*   Updated: 2022/05/18 16:22:42 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,9 @@ void	single_executor(t_data *data, t_cmd *cmd)
 		data->exit_status = WEXITSTATUS(status);
 	}
 	swap_old_fd(&old_stdin, &old_stdout, 1);
-	env_lstupdate(data->mini_envp, "_",
-		ft_strdup(param_lstlast(cmd->params)->param_str));
+	if (mini_getenv(data, "_"))
+		env_lstupdate(data->mini_envp, "_",
+			ft_strdup(param_lstlast(cmd->params)->param_str));
 }
 
 void	multiple_executor_child(t_data *data, t_cmd *cmd)
@@ -92,8 +93,9 @@ void	multiple_executor(t_data *data, t_cmd *cmd)
 
 	while (cmd)
 	{
-		env_lstupdate(data->mini_envp, "_",
-			ft_strdup(param_lstlast(cmd->params)->param_str));
+		if (mini_getenv(data, "_"))
+			env_lstupdate(data->mini_envp, "_",
+				ft_strdup(param_lstlast(cmd->params)->param_str));
 		if (cmd != data->cmds)
 			cmd->input_fd = pipes[0];
 		pipe(pipes);
