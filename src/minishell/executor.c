@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/18 17:26:27 by nazrinsha        ###   ########.fr       */
+/*   Updated: 2022/05/18 17:40:10 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	execute_command(t_data *data, t_cmd *cmd, t_param *command_str)
 	char	*fullpath;
 	char	*temp;
 
+	signal(SIGINT, SIG_DFL);
 	params = get_param_array(cmd);
 	if (mini_getenv(data, "PATH"))
 		paths = ft_split(mini_getenv(data, "PATH"), ':');
@@ -57,10 +58,7 @@ void	single_executor(t_data *data, t_cmd *cmd)
 	{
 		pid = fork();
 		if (pid == 0)
-		{
-			signal(SIGINT, SIG_DFL);
 			execute_command(data, cmd, param_lstfind(cmd->params, COMMAND, 0));
-		}
 		waitpid(pid, &status, 0);
 		data->exit_status = WEXITSTATUS(status);
 	}
