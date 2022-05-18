@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/18 16:22:42 by nazrinsha        ###   ########.fr       */
+/*   Updated: 2022/05/18 17:05:09 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ void	multiple_executor_child(t_data *data, t_cmd *cmd)
 	t_cmdtype	type;
 
 	type = check_builtin(cmd->params);
-	handle_redirections(data, cmd, cmd->params);
+	if (handle_redirections(data, cmd, cmd->params))
+		ft_exit(data, data->exit_status);
 	swap_new_fd(cmd);
 	if (type != NON_BUILTIN)
 	{
