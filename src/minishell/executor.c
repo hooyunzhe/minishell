@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/18 17:05:09 by nazrinsha        ###   ########.fr       */
+/*   Updated: 2022/05/18 17:26:27 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	single_executor(t_data *data, t_cmd *cmd)
 	swap_old_fd(&old_stdin, &old_stdout, 0);
 	swap_new_fd(cmd);
 	type = check_builtin(cmd->params);
+	tcsetattr(0, 0, &data->original_term);
 	if (type != NON_BUILTIN)
 		execute_builtin(data, cmd, type);
 	else if (type != NO_CMD)

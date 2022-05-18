@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:33:50 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/17 17:44:47 by nazrinsha        ###   ########.fr       */
+/*   Updated: 2022/05/18 17:20:54 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	ft_parent_exit(t_data *data, int exit_num)
 	free_data(data);
 	print_outro();
 	system("leaks minishell");
+	tcsetattr(0, 0, &data->original_term);
 	exit(exit_num);
 }
 
