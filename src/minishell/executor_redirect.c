@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 15:06:59 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/09 10:50:43 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/18 16:27:23 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void	handle_io(t_data *data, t_cmd *cmd, t_param *params)
 		cmd->input_fd = handle_heredoc(data, params->next->param_str);
 	else if (params->redirection_type == S_OUT)
 		cmd->output_fd = open(params->next->param_str,
-				O_WRONLY | O_CREAT, 0644);
+				O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (params->redirection_type == D_OUT)
 		cmd->output_fd = open(params->next->param_str,
 				O_WRONLY | O_CREAT | O_APPEND, 0644);
