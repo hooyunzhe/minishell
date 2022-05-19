@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:05:43 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/04/27 10:26:47 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/17 17:30:18 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ void	update_env_pwd(t_data *data)
 	char	*oldpath;
 	t_envp	*node;
 
+	if (!mini_getenv(data, "PWD") || !mini_getenv(data, "OLDPWD"))
+		return ;
 	oldpath = ft_strdup(mini_getenv(data, "PWD"));
 	node = data->mini_envp;
 	while (node)

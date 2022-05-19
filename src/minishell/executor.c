@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/18 16:24:27 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/19 14:57:57 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	execute_command(t_data *data, t_cmd *cmd, t_param *command_str)
 	char	*fullpath;
 	char	*temp;
 
+	signal(SIGINT, SIG_DFL);
 	params = get_param_array(cmd);
 	if (mini_getenv(data, "PATH"))
 		paths = ft_split(mini_getenv(data, "PATH"), ':');
@@ -50,6 +51,7 @@ void	single_executor(t_data *data, t_cmd *cmd)
 	swap_old_fd(&old_stdin, &old_stdout, 0);
 	swap_new_fd(cmd);
 	type = check_builtin(cmd->params);
+	tcsetattr(0, 0, &data->original_term);
 	if (type != NON_BUILTIN)
 		execute_builtin(data, cmd, type);
 	else if (type != NO_CMD)
@@ -61,10 +63,9 @@ void	single_executor(t_data *data, t_cmd *cmd)
 		data->exit_status = WEXITSTATUS(status);
 	}
 	swap_old_fd(&old_stdin, &old_stdout, 1);
-	env_lstupdate(data->mini_envp, "_",
-		ft_strdup(param_lstlast(cmd->params)->param_str));
-	close(data->cmds->input_fd);
-	close(data->cmds->output_fd);
+	if (mini_getenv(data, "_"))
+		env_lstupdate(data->mini_envp, "_",
+			ft_strdup(param_lstlast(cmd->params)->param_str));
 }
 
 void	multiple_executor_child(t_data *data, t_cmd *cmd)
@@ -72,7 +73,7 @@ void	multiple_executor_child(t_data *data, t_cmd *cmd)
 	t_cmdtype	type;
 
 	type = check_builtin(cmd->params);
-	if (handle_redirections(data, cmd, cmd->params) == 1)
+	if (handle_redirections(data, cmd, cmd->params))
 		ft_exit(data, data->exit_status);
 	swap_new_fd(cmd);
 	if (type != NON_BUILTIN)
@@ -94,8 +95,9 @@ void	multiple_executor(t_data *data, t_cmd *cmd)
 
 	while (cmd)
 	{
-		env_lstupdate(data->mini_envp, "_",
-			ft_strdup(param_lstlast(cmd->params)->param_str));
+		if (mini_getenv(data, "_"))
+			env_lstupdate(data->mini_envp, "_",
+				ft_strdup(param_lstlast(cmd->params)->param_str));
 		if (cmd != data->cmds)
 			cmd->input_fd = pipes[0];
 		pipe(pipes);

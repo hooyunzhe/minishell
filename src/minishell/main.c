@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:24:20 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/13 12:26:52 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/17 17:27:56 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char **argv, char **envp)
 	int		exit_status;
 	t_data	*data;
 
-	// print_intro();
+	print_intro();
 	data = new_data(envp);
 	if (argc >= 3 && !ft_strncmp(argv[1], "-c", 3))
 	{

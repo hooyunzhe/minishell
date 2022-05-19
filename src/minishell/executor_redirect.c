@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 15:06:59 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/09 10:50:43 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/18 16:48:49 by nazrinsha        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,17 @@ static int	handle_heredoc(t_data *data, char *delim)
 {
 	int		pipes[2];
 	char	*line;
+	char	*temp;
 
 	pipe(pipes);
 	line = readline("heredoc > ");
 	while (line && ft_strncmp(line, delim, ft_strlen(delim) + 1))
 	{
-		line = get_expanded_param(data, line, ft_strlen(line));
-		write(pipes[1], line, ft_strlen(line));
-		write(pipes[1], "\n", 1);
+		temp = get_expanded_param(data, line, ft_strlen(line));
 		free(line);
+		write(pipes[1], temp, ft_strlen(temp));
+		write(pipes[1], "\n", 1);
+		free(temp);
 		line = readline("heredoc > ");
 	}
 	free(line);
@@ -49,7 +51,7 @@ static void	handle_io(t_data *data, t_cmd *cmd, t_param *params)
 		cmd->input_fd = handle_heredoc(data, params->next->param_str);
 	else if (params->redirection_type == S_OUT)
 		cmd->output_fd = open(params->next->param_str,
-				O_WRONLY | O_CREAT, 0644);
+				O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (params->redirection_type == D_OUT)
 		cmd->output_fd = open(params->next->param_str,
 				O_WRONLY | O_CREAT | O_APPEND, 0644);

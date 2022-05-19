@@ -6,7 +6,11 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:22:40 by hyun-zhe          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/05/18 16:20:47 by hyun-zhe         ###   ########.fr       */
+=======
+/*   Updated: 2022/05/17 18:44:47 by nazrinsha        ###   ########.fr       */
+>>>>>>> d8d4f5f08e0e707f7df64afa92e157b6d02e42d0
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +44,7 @@ int	minishell(t_data *data)
 	line = readline("mini x hell % ");
 	while (line != NULL)
 	{
+		signal(SIGINT, SIG_IGN);
 		parser(data, line);
 		count_args(data->cmds);
 		add_history(line);
@@ -47,9 +52,8 @@ int	minishell(t_data *data)
 		cmd_lstclear(&(data->cmds));
 		data->cmd_count = 0;
 		free(line);
-		printf("BEF\n");
+		read_signals(data);
 		line = readline("mini x hell % ");
-		printf("AFT\n");
 	}
 	if (!line)
 	{
