@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 10:22:40 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/13 12:24:12 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/18 16:20:47 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ int	minishell(t_data *data)
 		cmd_lstclear(&(data->cmds));
 		data->cmd_count = 0;
 		free(line);
+		printf("BEF\n");
 		line = readline("mini x hell % ");
+		printf("AFT\n");
 	}
 	if (!line)
 	{

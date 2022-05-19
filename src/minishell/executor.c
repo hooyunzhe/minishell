@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/09 15:38:17 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/18 16:24:27 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ void	single_executor(t_data *data, t_cmd *cmd)
 	swap_old_fd(&old_stdin, &old_stdout, 1);
 	env_lstupdate(data->mini_envp, "_",
 		ft_strdup(param_lstlast(cmd->params)->param_str));
+	close(data->cmds->input_fd);
+	close(data->cmds->output_fd);
 }
 
 void	multiple_executor_child(t_data *data, t_cmd *cmd)
@@ -70,7 +72,8 @@ void	multiple_executor_child(t_data *data, t_cmd *cmd)
 	t_cmdtype	type;
 
 	type = check_builtin(cmd->params);
-	handle_redirections(data, cmd, cmd->params);
+	if (handle_redirections(data, cmd, cmd->params) == 1)
+		ft_exit(data, data->exit_status);
 	swap_new_fd(cmd);
 	if (type != NON_BUILTIN)
 	{
@@ -79,6 +82,8 @@ void	multiple_executor_child(t_data *data, t_cmd *cmd)
 	}
 	else if (type != NO_CMD)
 		execute_command(data, cmd, param_lstfind(cmd->params, COMMAND, 0));
+	close(cmd->input_fd);
+	close(cmd->output_fd);
 }
 
 void	multiple_executor(t_data *data, t_cmd *cmd)
