@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/19 15:28:00 by hyun-zhe          #+#    #+#             */
+/*   Updated: 2022/05/19 16:58:28 by hyun-zhe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -246,6 +258,7 @@ char				**env_lst_to_arr(t_envp *envp);
 
 void				swap_old_fd(int *old_stdin, int *old_stdout, int type);
 void				swap_new_fd(t_cmd *cmd);
+void				close_fds(t_cmd *cmd, int pipes[2]);
 
 // execute builtin ---------------------
 

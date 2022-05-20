@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 13:57:34 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/19 14:57:57 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/19 17:00:21 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,6 @@ void	multiple_executor_child(t_data *data, t_cmd *cmd)
 	}
 	else if (type != NO_CMD)
 		execute_command(data, cmd, param_lstfind(cmd->params, COMMAND, 0));
-	close(cmd->input_fd);
-	close(cmd->output_fd);
 }
 
 void	multiple_executor(t_data *data, t_cmd *cmd)
@@ -106,7 +104,7 @@ void	multiple_executor(t_data *data, t_cmd *cmd)
 			cmd->output_fd = pipes[1];
 		if (pid == 0)
 			multiple_executor_child(data, cmd);
-		close(pipes[1]);
+		close_fds(cmd, pipes);
 		if (param_lstfind(cmd->params, REDIRECTION, 0) != NULL)
 			waitpid(-1, &status, 0);
 		cmd = cmd->next;

@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 15:17:35 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/04 15:17:41 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/19 16:58:14 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,15 @@ void	swap_new_fd(t_cmd *cmd)
 		dup2(cmd->output_fd, 1);
 		close(cmd->output_fd);
 	}
+}
+
+void	close_fds(t_cmd *cmd, int pipes[2])
+{
+	if (cmd->input_fd != pipes[0] && cmd->input_fd != 0)
+		close(cmd->input_fd);
+	if (cmd->output_fd != pipes[1] && cmd->output_fd != 1)
+		close(cmd->output_fd);
+	if (cmd->next == NULL)
+		close(pipes[0]);
+	close(pipes[1]);
 }

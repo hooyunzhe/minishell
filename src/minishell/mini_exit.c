@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/12 09:26:31 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/13 12:24:03 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/19 15:25:15 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,10 @@ void	mini_exit(t_data *data, t_cmd *cmd)
 	printf("exit\n");
 	if ((cmd->arg_count + cmd->option_count) == 0)
 		ft_parent_exit(data, data->exit_status);
-	else if ((cmd->arg_count + cmd->option_count) > 1)
-	{
+	else if ((cmd->arg_count + cmd->option_count) > 1
+		&& ft_strisnum(params->next->param_str))
 		handle_error(data, EXIT_TOOMANY, NULL);
-		if (!ft_strisnum(params->next->param_str))
-			data->exit_status = 255;
-	}
-	while (params && (cmd->arg_count + cmd->option_count) == 1)
+	while (params)
 	{
 		if (params->param_type == ARGUMENT || params->param_type == OPTION)
 		{
