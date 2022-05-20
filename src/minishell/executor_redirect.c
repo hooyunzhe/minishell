@@ -6,7 +6,7 @@
 /*   By: hyun-zhe <hyun-zhe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 15:06:59 by hyun-zhe          #+#    #+#             */
-/*   Updated: 2022/05/20 10:57:39 by hyun-zhe         ###   ########.fr       */
+/*   Updated: 2022/05/20 11:05:01 by hyun-zhe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	handle_redirections(t_data *data, t_cmd *cmd, t_param *params)
 			if (params->next && params->next->param_type == IO_FILE)
 			{
 				if (cmd->input_fd != 0 && params->redirection_type == S_IN
-						|| params->redirection_type == D_IN)
+					|| params->redirection_type == D_IN)
 					close(cmd->input_fd);
 				if (cmd->output_fd != 1 && (params->redirection_type == S_OUT
 						|| params->redirection_type == D_OUT))
