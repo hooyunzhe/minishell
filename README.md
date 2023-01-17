@@ -4,7 +4,7 @@
 
 **Score: 101/125**
 
-In this project, we implemented a simplied version of Bash, a UNIX shell <br/>
+In this project, we implemented a simplified version of Bash, a UNIX shell <br/>
 We handled most edge cases, even those not required
 
 By: Naz & YZ <3 JNG
